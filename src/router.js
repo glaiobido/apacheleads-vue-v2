@@ -6,6 +6,7 @@ Vue.use(Router)
 
 export default new Router({
   linkExactActiveClass: 'active',
+  mode: 'history',
   routes: [
     {
       path: '/',
@@ -18,12 +19,17 @@ export default new Router({
           // route level code-splitting
           // this generates a separate chunk (about.[hash].js) for this route
           // which is lazy-loaded when the route is visited.
-          component: () => import(/* webpackChunkName: "demo" */ './views/Dashboard.vue')
+          component: () => import(/* webpackChunkName: "demo" */ './views/ApacheDashboard.vue')
         },
         {
-          path: '/icons',
-          name: 'icons',
-          component: () => import(/* webpackChunkName: "demo" */ './views/Icons.vue')
+          path: '/lead-types',
+          name: 'lead-types',
+          component: () => import(/* webpackChunkName: "demo" */ './views/Apacheleads/Leadtypes/Leadtypes.vue')
+        },
+        {
+          path: '/leads',
+          name: 'leads',
+          component: () => import(/* webpackChunkName: "demo" */ './views/Apacheleads/Leads/Leads.vue')
         },
         {
           path: '/profile',
