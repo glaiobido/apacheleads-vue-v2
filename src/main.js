@@ -17,10 +17,22 @@ Vue.use(ArgonDashboard)
 Vue.use(VueAxios, axios)
 
 axios.defaults.baseURL = "http://localhost:8000/api";
-const token = localStorage.getItem('token');
-if (token) {
-   axios.defaults.headers.common['Authorization'] = token;
-}
+
+axios.interceptors.request.use(
+    (config) => {
+      let token = localStorage.getItem('token')
+  
+      if (token) {
+        config.headers['Authorization'] = 'Bearer '.concat(token);
+      }
+  
+      return config
+    },
+  
+    (error) => {
+      return Promise.reject(error)
+    }
+);
 
 new Vue({
   router,

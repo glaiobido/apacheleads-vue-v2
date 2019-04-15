@@ -27,14 +27,14 @@ export const mutations = {
 
   [types.FETCH_USER_FAILURE] (state) {
     state.token = null
-    // Cookies.remove('token')
+    localStorage.remove('token')
   },
 
   [types.LOGOUT] (state) {
     state.user = null
     state.token = null
 
-    // Cookies.remove('token')
+    localStorage.remove('token')
   },
 
   [types.UPDATE_USER] (state, { user }) {
@@ -50,8 +50,7 @@ export const actions = {
 
   async fetchUser ({ commit }) {
     try {
-      const { data } = await axios.get('/api/user')
-
+      const { data } = await axios.get('/user')
       commit(types.FETCH_USER_SUCCESS, { user: data })
     } catch (e) {
       commit(types.FETCH_USER_FAILURE)
@@ -68,11 +67,5 @@ export const actions = {
     } catch (e) { }
 
     commit(types.LOGOUT)
-  },
-
-  async fetchOauthUrl (ctx, { provider }) {
-    const { data } = await axios.post(`/api/oauth/${provider}`)
-
-    return data.url
   }
 }

@@ -29,6 +29,10 @@
                                         @click="login()" 
                                         type="primary" 
                                         class="my-4">Sign in</base-button>
+                                <base-button
+                                        @click="test()" 
+                                        type="primary" 
+                                        class="my-4">test</base-button>
                             </div>
                         </form>
                     </div>
@@ -46,16 +50,23 @@
 </template>
 <script>
     import axios from 'axios';
-
+    import { mapGetters } from 'vuex';
+    
     export default {
         name: 'login',
         data() {
-        return {
-            form: {
-            email: '',
-            password: ''
+            return {
+                form: {
+                email: '',
+                password: ''
+                }
             }
-        }
+        },
+
+        computed: {
+            ...mapGetters({
+                user: 'auth/user'
+            })
         },
         methods: {
             login() {
@@ -63,13 +74,26 @@
                     if (response.data.hasOwnProperty('success')) {
                         const token = response.data.success.token;
                         localStorage.setItem('token', token);
-                        axios.defaults.headers.common['Authorization'] = token;
-                        this.$router.push({name: 'dashboard'})
+                        const authtoken = "Bearer ".concat(token);
+                        // this.$store.dispatch('auth/saveToken', { token: token });
+
+                        // fetch users
+                        this.$store.dispatch('auth/fetchUser');
+                        
+                        axios.defaults.headers.common['Authorization'] = authtoken;
+                        // this.$router.push({name: 'dashboard'});
                     }
                 })
                 .catch((e) => {
                     
                 });
+
+                
+            },
+
+            test() {
+                // fetch users
+                this.$store.dispatch('auth/fetchUser');
             }
         }
     }
