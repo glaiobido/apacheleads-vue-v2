@@ -14,7 +14,10 @@
                                 </h3>
                                 </div>
                                 <div class="col text-right">
-                                <base-button type="default">Add Lead Type</base-button>
+                                <base-button 
+                                        type="default"
+                                        @click="showAddModal = true" 
+                                        >Add Lead Type</base-button>
                                 </div>
                             </div>
                         </div>
@@ -23,7 +26,7 @@
                             <base-table class="table align-items-center table-flush dark"
                                         thead-classes="thead-light"
                                         tbody-classes="list"
-                                        :data="tableData">
+                                        :data="leadtypes">
 
                                 <template slot="columns">
                                     <th>ID</th>
@@ -33,7 +36,19 @@
                                 </template>
 
                                 <template slot-scope="{row}">
-                               
+                                    <td class="budget">
+                                        {{row.id}}
+                                    </td>
+                                    <td class="budget">
+                                        {{row.name}}
+                                    </td>
+                                    <td class="budget">
+                                        AU
+                                    </td>
+                                    <td class="budget">
+                                        <base-button type="default" class="my--1">Edit</base-button>
+                                        <base-button type="warning" outline class="my--1" @click="$emit('closeModal')">Delete</base-button>
+                                    </td>
                                 </template>
 
                             </base-table>
@@ -50,25 +65,50 @@
             </div>
           
         </div>
-
+        <add-lead-type-modal :showModal="showAddModal" @closeModal="showAddModal=false"></add-lead-type-modal>
+        <edit-lead-type-modal :showModal="showEditModal" @closeModal="showEditModal=false"></edit-lead-type-modal>
     </div>
 </template>
+
 <script>
-  import ProjectsTable from '../../Tables/ProjectsTable'
-  export default {
-    name: 'tables',
-    components: {
-      ProjectsTable
-    },
+  import ProjectsTable from '../../Tables/ProjectsTable';
+  import { mapGetters } from 'vuex';
+  import AddLeadTypeModal from './AddLeadTypeModal'
+  import EditLeadTypeModal from './EditLeadTypeModal'
 
-    data() {
-        return {
-            type: '',
-            tableData: []
+    export default {
+        name: 'tables',
+        components: {
+            AddLeadTypeModal,
+            EditLeadTypeModal
+        },
+
+        created() {
+            this.$store.dispatch('leadtypes/fetchLeadTypes');
+        },
+
+        data() {
+            return {
+                showAddModal: false,
+                showEditModal: false,
+                tableData: []
+            }
+        },
+
+        computed: {
+            ...mapGetters({
+                user: 'auth/user',
+                leadtypes: 'leadtypes/leadtypes'
+            })
+        },
+
+        methods: {
+            test() {
+                
+            }
         }
-    }
 
-  };
+    };
 </script>
 <style>
     .bg-gradient-default {
