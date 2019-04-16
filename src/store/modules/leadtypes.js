@@ -9,8 +9,10 @@ export const state = {
 
 // getters
 export const getters = {
-    leadtypes: state.leadtypes,
-    leadtype: state.leadtype
+    leadtypes: state => state.leadtypes,
+    leadtype: state => (lead_type_id) => {
+        return state.leadtypes.find(leadtype => leadtype.lead_type_id == lead_type_id)
+    }
 }
 
 // mutations
@@ -30,14 +32,10 @@ export const actions = {
   
     async fetchLeadTypes ({ commit }) {
         try {
-        const { data } = await axios.get('/api/user')
-        commit(types.FETCH_LEADTYPES_SUCCESS, { leadtypes: data })
+            const { data } = await axios.get('/leadtypes');
+            commit(types.FETCH_LEADTYPES_SUCCESS, { leadtypes: data })
         } catch (e) {
         
         }
-    },
-
-    updateUser ({ commit }, payload) {
-        commit(types.UPDATE_USER, payload)
     }
 }
