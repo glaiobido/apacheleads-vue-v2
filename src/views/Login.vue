@@ -81,7 +81,7 @@
                         this.$store.dispatch('auth/fetchUser');
                         
                         axios.defaults.headers.common['Authorization'] = authtoken;
-                        // this.$router.push({name: 'dashboard'});
+                        this.$router.push({name: 'dashboard'});
                     }
                 })
                 .catch((e) => {
