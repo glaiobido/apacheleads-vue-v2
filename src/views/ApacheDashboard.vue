@@ -1,6 +1,6 @@
 <template>
     <div>
-        <base-header type="gradient-success" class="pb-6 pb-8 pt-5 pt-md-8">
+        <base-header type="gradient-default" class="pb-6 pb-8 pt-5 pt-md-8">
             <!-- Card stats -->
             <div class="row">
                 <div class="col-xl-3 col-lg-6">
@@ -203,4 +203,8 @@
     }
   };
 </script>
-<style></style>
+<style>
+    .bg-gradient-default {
+        background: linear-gradient(87deg, #172b4d 0, #37b8f5 100%) !important;
+    }
+</style>
