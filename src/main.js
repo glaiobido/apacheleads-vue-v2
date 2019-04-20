@@ -1,12 +1,14 @@
 import Vue from 'vue'
 import App from './App.vue'
 import router from './router'
-import './registerServiceWorker'
 import ArgonDashboard from './plugins/argon-dashboard'
-import 'es6-promise/auto'
+import './registerServiceWorker'
+// import 'es6-promise/auto'
 
 import axios from 'axios'
 import VueAxios from 'vue-axios'
+import VueSweetalert2 from 'vue-sweetalert2';
+
 
 // Vuex
 import store from './store/store.js';
@@ -15,6 +17,7 @@ Vue.config.productionTip = false
 
 Vue.use(ArgonDashboard)
 Vue.use(VueAxios, axios)
+Vue.use(VueSweetalert2);
 
 axios.defaults.baseURL = "http://localhost:8000/api";
 
