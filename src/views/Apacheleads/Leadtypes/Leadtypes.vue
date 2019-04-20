@@ -46,8 +46,14 @@
                                         AU
                                     </td>
                                     <td class="budget">
-                                        <base-button type="default" class="my--1">Edit</base-button>
-                                        <base-button type="warning" outline class="my--1" @click="$emit('closeModal')">Delete</base-button>
+                                        <base-button
+                                            @click="triggerEditModal(row.id)" 
+                                            type="default" 
+                                            class="my--1">Edit</base-button>
+                                        <base-button type="warning" 
+                                                     outline 
+                                                     class="my--1" 
+                                                     @click="deleteLeadType(row.id)">Delete</base-button>
                                     </td>
                                 </template>
 
@@ -66,13 +72,17 @@
           
         </div>
         <add-lead-type-modal :showModal="showAddModal" @closeModal="showAddModal=false"></add-lead-type-modal>
-        <edit-lead-type-modal :showModal="showEditModal" @closeModal="showEditModal=false"></edit-lead-type-modal>
+        <edit-lead-type-modal 
+            :showModal="showEditModal"
+            :leadTypeId="id" 
+            @closeModal="showEditModal=false"></edit-lead-type-modal>
     </div>
 </template>
 
 <script>
-  import ProjectsTable from '../../Tables/ProjectsTable';
+  import axios from 'axios';
   import { mapGetters } from 'vuex';
+  import ProjectsTable from '../../Tables/ProjectsTable';
   import AddLeadTypeModal from './AddLeadTypeModal'
   import EditLeadTypeModal from './EditLeadTypeModal'
 
@@ -91,7 +101,7 @@
             return {
                 showAddModal: false,
                 showEditModal: false,
-                tableData: []
+                id: 0
             }
         },
 
@@ -103,8 +113,33 @@
         },
 
         methods: {
-            test() {
-                
+            triggerEditModal(lead_type_id) {
+                this.id = lead_type_id;
+                this.showEditModal = true;
+            },
+
+            async deleteLeadType(lead_type_id) {
+
+                this.$swal({
+                    title: 'Are you sure?',
+                    text: "You won't be able to revert this!",
+                    type: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Yes, delete it!'
+                }).then((result) => {
+                    if (result.value) {
+                        axios.delete(`/leadtypes/${lead_type_id}`).then(response => {
+                           this.$store.dispatch('leadtypes/fetchLeadTypes');
+                        });
+                        this.$swal(
+                            'Deleted!',
+                            'Your file has been deleted.',
+                            'success'
+                        )
+                    }
+                });
             }
         }
 
