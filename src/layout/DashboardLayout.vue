@@ -3,7 +3,7 @@
     <side-bar
       :background-color="sidebarBackground"
       short-title="Argon"
-      title="Argon"
+      title="Argon test"
     >
       <template slot="links">
         <sidebar-item
@@ -14,6 +14,7 @@
           }"
         />
   
+        <sidebar-item :link="{name: 'Import Leads', icon: 'ni ni-planet text-blue', path: '/import-leads'}"/>
         <sidebar-item :link="{name: 'Leads', icon: 'ni ni-planet text-blue', path: '/leads'}"/>
         <sidebar-item :link="{name: 'Lead Types', icon: 'ni ni-pin-3 text-orange', path: '/lead-types'}"/>
         <sidebar-item :link="{name: 'Orders', icon: 'ni ni-single-02 text-yellow', path: '/profile'}"/>
@@ -47,7 +48,7 @@
     },
     data() {
       return {
-        sidebarBackground: 'blue' //vue|blue|orange|green|red|primary
+        sidebarBackground: 'primary' //vue|blue|orange|green|red|primary
       };
     },
     methods: {
