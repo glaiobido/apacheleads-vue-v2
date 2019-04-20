@@ -32,6 +32,11 @@ export default new Router({
           component: () => import(/* webpackChunkName: "demo" */ './views/Apacheleads/Leads/Leads.vue')
         },
         {
+          path: '/import-leads',
+          name: 'import-leads',
+          component: () => import(/* webpackChunkName: "demo" */ './views/Apacheleads/Leads/ImportLeads.vue')
+        },
+        {
           path: '/profile',
           name: 'profile',
           component: () => import(/* webpackChunkName: "demo" */ './views/UserProfile.vue')
