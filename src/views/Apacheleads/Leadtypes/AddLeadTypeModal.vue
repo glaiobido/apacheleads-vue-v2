@@ -123,8 +123,16 @@ export default {
 
         saveLeadType() {
             axios.post('/leadtypes', this.form).then((reponse) => {
-                this.$store.dispatch('leadtypes/fetchLeadTypes');
-                this.$emit('closeModal')
+                 this.$swal({
+                    title: 'Success!',
+                    text: 'Lead Type has been added successfully',
+                    type: 'success',
+                    confirmButtonText: 'Ok'
+                })
+                .then((result) => {
+                    this.$store.dispatch('leadtypes/fetchLeadTypes');
+                    this.$emit('closeModal')
+                });
             })
             .catch((e) => {
                     
