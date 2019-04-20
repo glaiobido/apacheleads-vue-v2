@@ -4,14 +4,15 @@ import * as types from '../mutation-types'
 // state
 export const state = {
     leadtypes: [],
-    leadtype: null
+    leadtype: null,
+    id: 0
 }
 
 // getters
 export const getters = {
     leadtypes: state => state.leadtypes,
     leadtype: state => (lead_type_id) => {
-        return state.leadtypes.find(leadtype => leadtype.lead_type_id == lead_type_id)
+        return state.leadtypes.find(leadtype => leadtype.id == lead_type_id)
     }
 }
 
