@@ -9,18 +9,18 @@
                         <div class="card-header border-0 bg-transparent">
                             <div class="row align-items-center">
                                 <div class="col">
-                                <h3 class="mb-0 text-dark">
-                                    Lead Types
-                                </h3>
+                                    <h3 class="mb-0 text-dark">
+                                        Lead Types
+                                    </h3>
                                 </div>
                                 <div class="col text-right">
-                                <base-button 
-                                        type="default"
-                                        @click="showAddModal = true" 
-                                        >Add Lead Type</base-button>
+                                    <base-button 
+                                            type="default"
+                                            @click="showAddModal = true" 
+                                            >Add Lead Type</base-button>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
 
                         <div class="table-responsive">
                             <base-table class="table align-items-center table-flush dark"

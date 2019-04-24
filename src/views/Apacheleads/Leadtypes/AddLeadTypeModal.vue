@@ -43,26 +43,29 @@
                             <div class="col">
                                 <h4>Add fields: </h4>
 
-                                <div class="form-group" v-for="(field, index) of form.fields" v-bind:key="index">
-                                    <div class="my-1">
-                                        <base-button
-                                            @click="addField()"
-                                            size="sm" 
-                                            type="default">Add</base-button>
-                                        <base-button
-                                            v-if="index != 0" 
-                                            size="sm"
-                                            @click="removeField(index)" 
-                                            type="warning">Remove</base-button>
-                                    </div>
-                                
-                                    <base-input alternative
+                                <draggable v-model="form.fields" draggable=".item" @start="drag=true" @end="drag=false">
+                                    <div v-for="(field, index) of form.fields" :key="index" class="item form-group">
+                                         <div class="my-1">
+                                            <base-button
+                                                @click="addField()"
+                                                size="sm" 
+                                                type="default">Add</base-button>
+                                            <base-button
+                                                v-if="index != 0" 
+                                                size="sm"
+                                                @click="removeField(index)" 
+                                                type="warning">Remove</base-button>
+                                        </div>
+                                        <base-input alternative
                                                 v-model="field.name" 
                                                 class="mb-2"
                                                 placeholder="Field name">
-                                    </base-input>
-                                    <small class="form-text text-muted"></small>
-                                </div>
+                                        </base-input>
+                                    </div>
+                                     
+                                </draggable>
+
+                               
                                
                             </div>
                           
@@ -82,11 +85,13 @@
 
 import Modal from "@/components/Modal.vue";
 import axios from 'axios';
+import draggable from 'vuedraggable';
 
 export default {
     props: ['showModal'],
     components: {
-        Modal
+        Modal,
+        draggable
     },
     
     data() {

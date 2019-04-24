@@ -29,10 +29,6 @@
                                         @click="login()" 
                                         type="primary" 
                                         class="my-4">Sign in</base-button>
-                                <base-button
-                                        @click="test()" 
-                                        type="primary" 
-                                        class="my-4">test</base-button>
                             </div>
                         </form>
                     </div>
@@ -76,24 +72,17 @@
                         localStorage.setItem('token', token);
                         const authtoken = "Bearer ".concat(token);
                         // this.$store.dispatch('auth/saveToken', { token: token });
-
+                        axios.defaults.headers.common['Authorization'] = authtoken;
                         // fetch users
                         this.$store.dispatch('auth/fetchUser');
-                        
-                        axios.defaults.headers.common['Authorization'] = authtoken;
                         this.$router.push({name: 'dashboard'});
                     }
                 })
                 .catch((e) => {
-                    
+                     this.$router.push({name: 'login'});
                 });
 
                 
-            },
-
-            test() {
-                // fetch users
-                this.$store.dispatch('auth/fetchUser');
             }
         }
     }

@@ -19,33 +19,41 @@ export default new Router({
           // route level code-splitting
           // this generates a separate chunk (about.[hash].js) for this route
           // which is lazy-loaded when the route is visited.
-          component: () => import(/* webpackChunkName: "demo" */ './views/ApacheDashboard.vue')
+          component: () => import(/* webpackChunkName: "demo" */ './views/ApacheDashboard.vue'),
+          meta: {
+            pageTitle: 'Admin Dashboard'
+          }
         },
         {
           path: '/lead-types',
           name: 'lead-types',
-          component: () => import(/* webpackChunkName: "demo" */ './views/Apacheleads/Leadtypes/Leadtypes.vue')
+          component: () => import(/* webpackChunkName: "demo" */ './views/Apacheleads/Leadtypes/Leadtypes.vue'),
+          meta: {
+            pageTitle: 'Lead Types'
+          }
         },
         {
           path: '/leads',
           name: 'leads',
-          component: () => import(/* webpackChunkName: "demo" */ './views/Apacheleads/Leads/Leads.vue')
+          component: () => import(/* webpackChunkName: "demo" */ './views/Apacheleads/Leads/Leads.vue'),
+          meta: {
+            pageTitle: 'Leads'
+          }
         },
         {
           path: '/import-leads',
-          name: 'import-leads',
-          component: () => import(/* webpackChunkName: "demo" */ './views/Apacheleads/Leads/ImportLeads.vue')
+          name: 'import leads',
+          component: () => import(/* webpackChunkName: "demo" */ './views/Apacheleads/Leads/ImportLeads.vue'),
+          meta: {
+            pageTitle: 'Import New Leads'
+          }
         },
         {
           path: '/profile',
           name: 'profile',
           component: () => import(/* webpackChunkName: "demo" */ './views/UserProfile.vue')
         },
-        {
-          path: '/maps',
-          name: 'maps',
-          component: () => import(/* webpackChunkName: "demo" */ './views/Maps.vue')
-        },
+        
         {
           path: '/tables',
           name: 'tables',

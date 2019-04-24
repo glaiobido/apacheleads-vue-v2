@@ -41,9 +41,9 @@
                         <hr>
                         <div class="row">
                             <div class="col">
-                                <h4>Add fields: </h4>
-
-                                <div class="form-group" v-for="(field, index) of form.fields" :key="index">
+                                <h4>Edit fields: </h4>
+                                <draggable v-model="form.fields" draggable=".item" @start="drag=true" @end="drag=false">
+                                <div class="form-group item" v-for="(field, index) of form.fields" :key="field.order">
                                     <div class="my-1">
                                         <base-button
                                             @click="addField()"
@@ -63,7 +63,7 @@
                                     </base-input>
                                     <small class="form-text text-muted"></small>
                                 </div>
-                               
+                                </draggable>
                             </div>
                           
                         </div>
@@ -83,11 +83,13 @@
 import axios from 'axios';
 import { mapGetters } from 'vuex';
 import Modal from "@/components/Modal.vue";
+import draggable from 'vuedraggable';
 
 export default {
     props: ['showModal', 'leadTypeId'],
     components: {
-        Modal
+        Modal,
+        draggable
     },
     
     data() {
@@ -160,7 +162,8 @@ export default {
                 return { 
                     'name': field.name,
                     'id': field.id,
-                    'is_new': false
+                    'is_new': false,
+                    'order': field.order
                 }
             });
         },
