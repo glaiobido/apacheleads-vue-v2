@@ -39,6 +39,7 @@
   import DashboardNavbar from './DashboardNavbar.vue';
   import ContentFooter from './ContentFooter.vue';
   import { FadeTransition } from 'vue2-transitions';
+  import { mapGetters } from 'vuex';
 
   export default {
     components: {
@@ -51,6 +52,17 @@
         sidebarBackground: 'primary' //vue|blue|orange|green|red|primary
       };
     },
+
+    created() {
+      this.$store.dispatch('auth/checkAuth');
+    },
+
+    computed: {
+      ...mapGetters({
+        'user': 'auth/user'
+      })
+    },
+
     methods: {
       toggleSidebar() {
         if (this.$sidebar.showSidebar) {

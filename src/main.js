@@ -8,7 +8,9 @@ import './registerServiceWorker'
 import axios from 'axios'
 import VueAxios from 'vue-axios'
 import VueSweetalert2 from 'vue-sweetalert2';
-
+import VueGoodTablePlugin from 'vue-good-table';
+// import the styles 
+import 'vue-good-table/dist/vue-good-table.css'
 
 // Vuex
 import store from './store/store.js';
@@ -18,6 +20,7 @@ Vue.config.productionTip = false
 Vue.use(ArgonDashboard)
 Vue.use(VueAxios, axios)
 Vue.use(VueSweetalert2);
+Vue.use(VueGoodTablePlugin);  
 
 axios.defaults.baseURL = "http://localhost:8000/api";
 

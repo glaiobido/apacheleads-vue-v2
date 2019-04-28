@@ -12,7 +12,7 @@
                   <img alt="Image placeholder" src="img/theme/team-4-800x800.jpg">
                 </span>
                         <div class="media-body ml-2 d-none d-lg-block">
-                            <span class="mb-0 text-sm  font-weight-bold">ADMIN</span>
+                            <span class="mb-0 text-sm  font-weight-bold">{{ user.firstname || "" }}</span>
                         </div>
                     </div>
 
@@ -26,7 +26,7 @@
                         </router-link>
                        
                        
-                        <router-link to="/profile" class="dropdown-item">
+                        <router-link to="/login" @click.native="logout" class="dropdown-item">
                             <i class="ni ni-user-run"></i>
                             <span>Logout</span>
                         </router-link>
@@ -53,6 +53,10 @@
         user: 'auth/user'
       })
     },
+
+    created() {
+      this.$store.dispatch('auth/checkAuth');
+    },
     methods: {
       toggleSidebar() {
         this.$sidebar.displaySidebar(!this.$sidebar.showSidebar);
@@ -62,6 +66,10 @@
       },
       toggleMenu() {
         this.showMenu = !this.showMenu;
+      },
+      logout() {
+        alert()
+        // this.$store.dispatch('auth/logout');
       }
     }
   };

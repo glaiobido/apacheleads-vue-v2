@@ -1,10 +1,10 @@
-import axios from 'axios'
-import * as types from '../mutation-types'
+import axios from 'axios';
+import * as types from '../mutation-types';
 
 // state
 export const state = {
   user: null,
-  token: localStorage.getItem('token')
+  token: localStorage.getItem('token')  
 }
 
 // getters
@@ -44,8 +44,29 @@ export const mutations = {
 
 // actions
 export const actions = {
+
+  login({ commit, dispatch }, payload) {
+    axios.post('/login', payload).then((response) => {
+      
+      if (response.data.hasOwnProperty('success')) {
+          const token = response.data.success.token;
+
+          localStorage.setItem('token', token);
+          const authtoken = "Bearer ".concat(token);
+          axios.defaults.headers.common['Authorization'] = authtoken;
+          // commit(types.SAVE_TOKEN, token);
+          // fetch users
+          dispatch('fetchUser');
+         
+      }
+    })
+    .catch((e) => {
+        // this.$router.push({name: 'login'});
+    });
+  },
+
   saveToken ({ commit, dispatch }, payload) {
-    commit(types.SAVE_TOKEN, payload)
+    commit(types.SAVE_TOKEN, payload.token)
   },
 
   async fetchUser ({ commit }) {
@@ -63,10 +84,15 @@ export const actions = {
   },
 
   async logout ({ commit }) {
-    try {
-      await axios.post('/api/logout')
-    } catch (e) { }
-
     commit(types.LOGOUT)
+  },
+
+  async checkAuth({state, dispatch}) {
+    if (state.token !== null) {
+      // authenticated
+      dispatch('fetchUser');
+    } else {
+      return false;
+    }
   }
 }

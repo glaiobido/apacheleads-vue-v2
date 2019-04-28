@@ -4,6 +4,9 @@
                 <div class="card bg-secondary shadow border-0">
                    
                     <div class="card-body px-lg-5 py-lg-5">
+                        <div class="row">
+                            <img src="img/brand/apacheleadslogo.png" alt="" id="login-brand">
+                        </div>
                         <div class="text-center text-muted mb-4">
                             <small>Sign in with credentials</small>
                         </div>
@@ -64,28 +67,19 @@
                 user: 'auth/user'
             })
         },
+         
         methods: {
             login() {
-                axios.post('/login', this.form).then((response) => {
-                    if (response.data.hasOwnProperty('success')) {
-                        const token = response.data.success.token;
-                        localStorage.setItem('token', token);
-                        const authtoken = "Bearer ".concat(token);
-                        // this.$store.dispatch('auth/saveToken', { token: token });
-                        axios.defaults.headers.common['Authorization'] = authtoken;
-                        // fetch users
-                        this.$store.dispatch('auth/fetchUser');
-                        this.$router.push({name: 'dashboard'});
-                    }
-                })
-                .catch((e) => {
-                     this.$router.push({name: 'login'});
+                this.$store.dispatch('auth/login', this.form).then(response => {
+                    this.$router.push({name: 'dashboard'});
                 });
-
-                
             }
         }
     }
 </script>
 <style>
+    #login-brand {
+        height: 100%;
+        width: 100%;
+    }
 </style>

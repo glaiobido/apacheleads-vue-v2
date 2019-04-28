@@ -1,7 +1,8 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import DashboardLayout from '@/layout/DashboardLayout'
-import AuthLayout from '@/layout/AuthLayout'
+import AuthLayout from '@/layout/AuthLayout';
+
 Vue.use(Router)
 
 export default new Router({
@@ -12,6 +13,13 @@ export default new Router({
       path: '/',
       redirect: 'dashboard',
       component: DashboardLayout,
+      beforeEnter(to, from, next) {
+        if (localStorage.getItem('token')) {
+          next();
+        } else {
+          next('/login')
+        }
+      },
       children: [
         {
           path: '/dashboard',
@@ -65,6 +73,14 @@ export default new Router({
       path: '/',
       redirect: 'login',
       component: AuthLayout,
+      beforeEnter(to, from, next) {
+        next();
+        // if (localStorage.getItem('token')) {
+        //   next('/dashboard');
+        // } else {
+        //   next()
+        // }
+      },
       children: [
         {
           path: '/login',

@@ -21,7 +21,9 @@
                                     </div>
                                 </div>
                             </div>
-
+                        
+                         <div class="card-body">
+                           
                         <div class="table-responsive">
                             <base-table class="table align-items-center table-flush dark"
                                         thead-classes="thead-light"
@@ -58,6 +60,7 @@
                                 </template>
 
                             </base-table>
+                        </div>
                         </div>
 
                         <div class="card-footer d-flex justify-content-end bg-transparent">

@@ -146,6 +146,7 @@
   import * as chartConfigs from '@/components/Charts/config';
   import LineChart from '@/components/Charts/LineChart';
   import BarChart from '@/components/Charts/BarChart';
+  import { mapGetters } from 'vuex';
 
   // Tables
   import SocialTrafficTable from './Dashboard/SocialTrafficTable';
@@ -199,7 +200,8 @@
       }
     },
     mounted() {
-      this.initBigChart(0);
+        this.$store.dispatch('auth/checkAuth');
+        this.initBigChart(0);
     }
   };
 </script>
