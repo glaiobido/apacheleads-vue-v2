@@ -109,11 +109,9 @@
     methods: {
         onFileChange(event) {
             this.file = event.target.files[0];
-            console.log("file: ", event.target.files)
-        },
-        
-        async submitForImport() {
-                let formData = new FormData();
+            console.log("file: ", event.target.files);
+
+            let formData = new FormData();
                 formData.append('file', this.file);
                 formData.append('leadtype_id', this.leadtype_id);
 
@@ -128,6 +126,10 @@
                 .catch(function(){
                     console.log('FAILURE!!');
                 });
+        },
+        
+        async submitForImport() {
+                
         }
     }
   };

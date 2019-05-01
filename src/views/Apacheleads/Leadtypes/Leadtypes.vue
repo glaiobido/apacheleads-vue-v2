@@ -24,47 +24,37 @@
                         
                          <div class="card-body">
                            
-                        <div class="table-responsive">
-                            <base-table class="table align-items-center table-flush dark"
-                                        thead-classes="thead-light"
-                                        tbody-classes="list"
-                                        :data="leadtypes">
-
-                                <template slot="columns">
-                                    <th>ID</th>
-                                    <th>Name</th>
-                                    <th>Country</th>
-                                    <th></th>
-                                </template>
-
-                                <template slot-scope="{row}">
-                                    <td class="budget">
-                                        {{row.id}}
-                                    </td>
-                                    <td class="budget">
-                                        {{row.name}}
-                                    </td>
-                                    <td class="budget">
-                                        AU
-                                    </td>
-                                    <td class="budget">
-                                        <base-button
-                                            @click="triggerEditModal(row.id)" 
+                            <div class="table-responsive">
+                                <vuetable ref="vuetable"
+                                    :css="css.table"
+                                    :fields="fields"
+                                    :api-mode="false"
+                                    :data-manager="tableDataMgr"
+                                    pagination-path="pagination"
+                                    @vuetable:pagination-data="onPaginationData"
+                                >
+                                <div slot="actions" slot-scope="props">
+                                    <base-button
+                                            @click="triggerEditModal(props.rowData.id)"
                                             type="default" 
                                             class="my--1">Edit</base-button>
-                                        <base-button type="warning" 
+                                    <base-button type="warning" 
                                                      outline 
                                                      class="my--1" 
-                                                     @click="deleteLeadType(row.id)">Delete</base-button>
-                                    </td>
-                                </template>
+                                                     @click="deleteLeadType(props.rowData.id)">Delete</base-button>
+                                   
+                                </div>
+                                </vuetable>
+                               
+                            </div>
 
-                            </base-table>
-                        </div>
                         </div>
 
                         <div class="card-footer d-flex justify-content-end bg-transparent">
-                           
+                            <vuetable-pagination ref="pagination"
+                                @vuetable-pagination:change-page="onChangePage"
+                                :css="css.pagination"
+                            ></vuetable-pagination>
                         </div>
 
                     </div>
@@ -87,24 +77,62 @@
   import { mapGetters } from 'vuex';
   import ProjectsTable from '../../Tables/ProjectsTable';
   import AddLeadTypeModal from './AddLeadTypeModal'
-  import EditLeadTypeModal from './EditLeadTypeModal'
+  import EditLeadTypeModal from './EditLeadTypeModal';
+  import Vuetable from 'vuetable-2';
+  import VuetablePagination from "vuetable-2/src/components/VuetablePagination";
+  import VueTableCustomStyle from "./VueTableCustomStyle.js";
+  import _ from "lodash";
+
 
     export default {
         name: 'tables',
         components: {
             AddLeadTypeModal,
-            EditLeadTypeModal
+            EditLeadTypeModal,
+            Vuetable,
+            VuetablePagination
         },
 
         created() {
-            this.$store.dispatch('leadtypes/fetchLeadTypes');
+            this.$store.dispatch('leadtypes/fetchLeadTypes').then(response => {
+                this.tabledata = this.leadtypes;
+                console.log("created hook: ", this.tabledata)
+            });
+        },
+
+        watch: {
+            tabledata (val) {
+                console.log("table watch ", val);
+                this.$refs.vuetable.reload();
+            },
+            leadtypes() {
+                this.tabledata = this.leadtypes;
+                this.$refs.vuetable.reload();
+            }
         },
 
         data() {
             return {
                 showAddModal: false,
                 showEditModal: false,
-                id: 0
+                id: 0,
+                tablePerPage: 10,
+                css: VueTableCustomStyle,
+                tabledata: [],
+                fields: [
+                    {
+                        name: 'id',
+                        sortField: 'id'  
+                    },
+                    {
+                        name: 'name',
+                        sortField: 'name'  
+                    },
+                    {
+                        name: 'actions',
+                        sortField: 'name'  
+                    }
+                ]
             }
         },
 
@@ -143,7 +171,50 @@
                         )
                     }
                 });
-            }
+            },
+
+            tableDataMgr(sortOrder, pagination) {
+                if (this.tabledata.length < 1) return;
+               
+                let local = this.tabledata;
+
+                if (sortOrder.length > 0) {
+                    console.log("orderBy:", sortOrder[0].sortField, sortOrder[0].direction);
+                    local = _.orderBy(
+                        local,
+                        sortOrder[0].sortField,
+                        sortOrder[0].direction
+                    );
+                }
+
+                pagination = this.$refs.vuetable.makePagination(
+                    local.length,
+                    this.tablePerPage
+                );
+
+
+                let from = pagination.from - 1;
+                let to = from + this.tablePerPage;
+                console.log("tableDataMgr ",from)
+
+                let returnObj = {
+                    pagination: pagination,
+                    data: _.slice(local, from, to)
+
+                }
+                    console.log("table manager return : ", returnObj);
+                return returnObj;
+            },
+
+            async onPaginationData(paginationData) {
+                console.log("REF: ", this.$refs.pagination)
+                this.$refs.pagination.setPaginationData(paginationData);
+            },
+
+            onChangePage(page) {
+                this.$refs.vuetable.changePage(page);
+            },
+
         }
 
     };

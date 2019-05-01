@@ -54,7 +54,7 @@
     },
 
     created() {
-      this.$store.dispatch('auth/checkAuth');
+      this.fetchAuthData();
     },
 
     computed: {
@@ -68,6 +68,10 @@
         if (this.$sidebar.showSidebar) {
           this.$sidebar.displaySidebar(false);
         }
+      },
+
+      async fetchAuthData() {
+        await this.$store.dispatch('auth/checkAuth');
       }
     }
   };

@@ -12,7 +12,7 @@
                   <img alt="Image placeholder" src="img/theme/team-4-800x800.jpg">
                 </span>
                         <div class="media-body ml-2 d-none d-lg-block">
-                            <span class="mb-0 text-sm  font-weight-bold">{{ user.firstname || "" }}</span>
+                            <span class="mb-0 text-sm  font-weight-bold">{{ user && user.firstname ? user.firstname : "" }}</span>
                         </div>
                     </div>
 
