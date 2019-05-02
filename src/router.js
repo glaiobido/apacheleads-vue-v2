@@ -14,7 +14,7 @@ export default new Router({
       redirect: 'dashboard',
       component: DashboardLayout,
       beforeEnter(to, from, next) {
-        if (localStorage.getItem('token')) {
+        if (localStorage.getItem('token') != null) {
           next();
         } else {
           next('/login')
@@ -57,9 +57,9 @@ export default new Router({
           }
         },
         {
-          path: '/profile',
-          name: 'profile',
-          component: () => import(/* webpackChunkName: "demo" */ './views/UserProfile.vue')
+          path: '/orders',
+          name: 'orders',
+          component: () => import(/* webpackChunkName: "demo" */ './views/Apacheleads/Orders/Orders.vue')
         },
         
         {

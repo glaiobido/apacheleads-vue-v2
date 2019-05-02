@@ -120,8 +120,8 @@
                         'Content-Type': 'multipart/form-data'
                     }
                 }).then(function(response){
-                    console.log("response " , response.data[0])
-                    this.imported_data = response;
+                    console.log("response " , response)
+                    // this.imported_data = response;
                 })
                 .catch(function(){
                     console.log('FAILURE!!');

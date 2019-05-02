@@ -17,7 +17,7 @@
         <sidebar-item :link="{name: 'Import Leads', icon: 'ni ni-watch-time text-default', path: '/import-leads'}"/>
         <sidebar-item :link="{name: 'Leads', icon: 'ni ni-money-coins text-default', path: '/leads'}"/>
         <sidebar-item :link="{name: 'Lead Types', icon: 'ni ni-basket text-default', path: '/lead-types'}"/>
-        <sidebar-item :link="{name: 'Orders', icon: 'ni ni-delivery-fast text-default', path: '/profile'}"/>
+        <sidebar-item :link="{name: 'Orders', icon: 'ni ni-delivery-fast text-default', path: '/orders'}"/>
       
 
       </template>

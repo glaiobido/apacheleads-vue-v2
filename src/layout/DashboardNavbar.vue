@@ -68,8 +68,7 @@
         this.showMenu = !this.showMenu;
       },
       logout() {
-        alert()
-        // this.$store.dispatch('auth/logout');
+        this.$store.dispatch('auth/logout');
       }
     }
   };
