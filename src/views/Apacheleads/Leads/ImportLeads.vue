@@ -44,7 +44,7 @@
                             <base-table class="table align-items-center table-flush dark"
                                         thead-classes="thead-light"
                                         tbody-classes="list"
-                                        :data="imported_data">
+                                        :data="details">
 
                                 <template v-if="leadtype_id != null" slot="columns">
                                     <th v-for="(field, index) in fields" :key="index">{{ field.name }}</th>
@@ -52,7 +52,11 @@
                                 </template>
 
                                 <template slot-scope="{row}">
+                                    <td class="budget" v-for="(data, index) in row" :key="index">
+                                        {{data}}
+                                    </td>
                                     
+                                   
                                 </template>
 
                             </base-table>
@@ -103,6 +107,17 @@
 
         fields: function() {
             return (this.leadtype_id != null) ? this.leadtype(this.leadtype_id).fields : [];
+        },
+
+        details: function() {
+            return this.imported_data.map(data => {
+                
+                if (data.hasOwnProperty('info')) {
+                    return data.info;
+                } else {
+                    return;
+                }
+            })
         }
     },
 
@@ -114,14 +129,18 @@
             let formData = new FormData();
                 formData.append('file', this.file);
                 formData.append('leadtype_id', this.leadtype_id);
+            let self = this;
 
                 axios.post('/leads/import', formData, {
                     headers: {
                         'Content-Type': 'multipart/form-data'
                     }
                 }).then(function(response){
-                    console.log("response " , response)
-                    // this.imported_data = response;
+                    const { data } = response;
+                    console.log("response " , data.import_data)
+
+                    self.imported_data =data.import_data;
+                    
                 })
                 .catch(function(){
                     console.log('FAILURE!!');

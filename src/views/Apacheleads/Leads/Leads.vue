@@ -30,31 +30,13 @@
 
                                 <template slot="columns">
                                     <th>ID</th>
-                                    <th>Name</th>
-                                    <th>Country</th>
+                                    <th>Lead Type</th>
+                                    <th>Date Imported</th>
                                     <th></th>
                                 </template>
 
                                 <template slot-scope="{row}">
-                                    <td class="budget">
-                                        {{row.id}}
-                                    </td>
-                                    <td class="budget">
-                                        {{row.name}}
-                                    </td>
-                                    <td class="budget">
-                                        AU
-                                    </td>
-                                    <td class="budget">
-                                        <base-button
-                                            @click="triggerEditModal(row.id)" 
-                                            type="default" 
-                                            class="my--1">Edit</base-button>
-                                        <base-button type="warning" 
-                                                     outline 
-                                                     class="my--1" 
-                                                     @click="deleteLeadType(row.id)">Delete</base-button>
-                                    </td>
+                                    
                                 </template>
 
                             </base-table>
