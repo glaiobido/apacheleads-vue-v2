@@ -112,14 +112,20 @@
         },
 
         details: function() {
-            return this.imported_data.map(data => {
-                
-                if (data.hasOwnProperty('info')) {
-                    return data.info;
-                } else {
-                    return;
-                }
-            })
+            if (this.imported_data.length > 0) {
+
+                return this.imported_data.map(data => {
+                    
+                    if (data.hasOwnProperty('info')) {
+                        return data.info;
+                    } else {
+                        return;
+                    }
+                })
+            } else {
+                return [];
+            }
+
         }
     },
 
