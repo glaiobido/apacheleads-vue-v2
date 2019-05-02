@@ -30,6 +30,7 @@
                                     <div class="col text-right">
                                         <div class="form-group">
                                             <base-button
+                                                    v-if="importbtn"
                                                     @click="submitForImport()" 
                                                     type="default" 
                                                     class="my-4">Import</base-button>
@@ -91,7 +92,8 @@
       return {
         file: null,
         leadtype_id: null,
-        imported_data: []
+        imported_data: [],
+        importbtn: false
       }
     },
     created() {
@@ -124,6 +126,7 @@
     methods: {
         onFileChange(event) {
             this.file = event.target.files[0];
+            this.importbtn = true;
             console.log("file: ", event.target.files);
 
             let formData = new FormData();
@@ -148,7 +151,24 @@
         },
         
         async submitForImport() {
-                
+                 this.$swal({
+                    title: 'Importing file...',
+                    text: "File contents will be saved to our database",
+                    type: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Proceed'
+                }).then((result) => {
+                    if (result.value) {
+                      
+                        this.$swal(
+                            'Success!',
+                            'Your file has been successfully imported.',
+                            'success'
+                        )
+                    }
+                });
         }
     }
   };
