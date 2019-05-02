@@ -45,7 +45,7 @@ export const mutations = {
 // actions
 export const actions = {
 
-  login({ commit, dispatch }, payload) {
+  async login({ commit, dispatch }, payload) {
     axios.post('/login', payload).then((response) => {
       
       if (response.data.hasOwnProperty('success')) {

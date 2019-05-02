@@ -1,45 +1,46 @@
 <template>
     <div class="row justify-content-center">
-        <div class="col-lg-5 col-md-7">
+        <div class="col-lg-7 col-md-5">
             <div class="card bg-secondary shadow border-0">
-                <div class="card-header bg-transparent pb-5">
-                    <div class="text-muted text-center mt-2 mb-3">
-                        <small>Sign up with</small>
-                    </div>
-                    <div class="btn-wrapper text-center">
-                        <a href="#" class="btn btn-neutral btn-icon">
-                            <span class="btn-inner--icon"><img src="img/icons/common/github.svg"></span>
-                            <span class="btn-inner--text">Github</span>
-                        </a>
-                        <a href="#" class="btn btn-neutral btn-icon">
-                            <span class="btn-inner--icon"><img src="img/icons/common/google.svg"></span>
-                            <span class="btn-inner--text">Google</span>
-                        </a>
-                    </div>
-                </div>
+                
                 <div class="card-body px-lg-5 py-lg-5">
+                    <div class="row justify-content-center">
+                        <img src="img/brand/apacheleadslogo.png" alt="" id="login-brand">
+                    </div>
                     <div class="text-center text-muted mb-4">
-                        <small>Or sign up with credentials</small>
+                        <h3>Sign Up</h3>
+                        <small>Admin Account sign up with credentials</small>
                     </div>
                     <form role="form">
 
                         <base-input class="input-group-alternative mb-3"
-                                    placeholder="Name"
+                                    placeholder="First Name"
+                                    addon-left-icon="ni ni-single-02"
+                                    v-model="form.firstname">
+                        </base-input>
+                        <base-input class="input-group-alternative mb-3"
+                                    placeholder="Last Name"
                                     addon-left-icon="ni ni-hat-3"
-                                    v-model="model.name">
+                                    v-model="form.lastname">
                         </base-input>
 
                         <base-input class="input-group-alternative mb-3"
                                     placeholder="Email"
                                     addon-left-icon="ni ni-email-83"
-                                    v-model="model.email">
+                                    v-model="form.email">
                         </base-input>
 
                         <base-input class="input-group-alternative"
                                     placeholder="Password"
                                     type="password"
                                     addon-left-icon="ni ni-lock-circle-open"
-                                    v-model="model.password">
+                                    v-model="form.password">
+                        </base-input>
+                        <base-input class="input-group-alternative"
+                                    placeholder="Re-enter password"
+                                    type="password"
+                                    addon-left-icon="ni ni-lock-circle-open"
+                                    v-model="form.password_confirmation">
                         </base-input>
 
                         <div class="text-muted font-italic">
@@ -54,7 +55,7 @@
                             </div>
                         </div>
                         <div class="text-center">
-                            <base-button type="primary" class="my-4">Create account</base-button>
+                            <base-button type="primary" class="my-4" @click="saveUser()">Create account</base-button>
                         </div>
                     </form>
                 </div>
@@ -74,19 +75,49 @@
         </div>
     </div>
 </template>
+
 <script>
-  export default {
+    import axios from 'axios';
+    import { mapGetters } from 'vuex';
+
+    export default {
     name: 'register',
+
     data() {
       return {
-        model: {
-          name: '',
+        form: {
+          firstname: '',
+          lastname: '',
           email: '',
-          password: ''
+          password: '',
+          password_confirmation: ''
         }
       }
+    },
+
+    computed: {
+        ...mapGetters({
+            auth_user: 'auth/user',
+            users: 'users/users'
+        })
+    },
+
+    methods: {
+
+        async saveUser() {
+            await this.$store.dispatch('users/register', this.form).then(response => {
+               console.log("register: ", response);
+            
+            });
+        }
     }
   }
 </script>
+
+
 <style>
+
+#login-brand {
+    width: 70%;
+}
 </style>
