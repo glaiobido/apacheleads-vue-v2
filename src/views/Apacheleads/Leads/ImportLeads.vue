@@ -4,72 +4,81 @@
 
         <div class="container-fluid mt--9">
             <div class="row">
-                <div class="col">
+                <div class="col-xl-8 mb-5 mb-xl-0">
                     <div class="card shadow page-table-card">
-                        <div class="card-header border-0 bg-transparent">
-                            <form action="">
-                                <div class="row align-items-center">
-                                    <div class="col">
-                                        <div class="form-group">
-                                            <label class="form-control-label">Select Lead Type: </label>
-                                            <v-select :options="leadtypes" 
-                                                      :reduce="leadtype => leadtype.id"
-                                                       v-model="leadtype_id"
-                                                      label="name"  />
-                                        </div>
-                                    </div>
-                                    <div class="col">
-                                        <label class="form-control-label">Select CSV file: </label>
-                                        <base-input 
-                                            class="input-group-alternative"
-                                            accept=".csv"
-                                            @change="onFileChange"
-                                            type="file"/>
-            
-                                    </div>
-                                    <div class="col text-right">
-                                        <div class="form-group">
-                                            <base-button
-                                                    v-if="importbtn"
-                                                    @click="submitForImport()" 
-                                                    type="default" 
-                                                    class="my-4">Import</base-button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </form>
-                         
-                        </div>
+                        
+                        <div class="card-content">
+                            <h1 class="display-4">Hello, {{ user.firstname }}!</h1>
+                            <p class="lead">Please Select your CSV File of Leads to import.</p>
+                            <p>Take note of the following before uploading your file:</p>
+                            <ul>
+                                <li>Choose a Lead Type for this import.</li>
+                                <li>Row Headings in your file is required.</li>
+                                <li>Columns should be in the same order as listed upon selecting your Lead Type</li>
+                            </ul>
+                            <hr class="my-4">
                             
-                         <div class="table-responsive">
-                            <base-table class="table align-items-center table-flush dark"
-                                        thead-classes="thead-light"
-                                        tbody-classes="list"
-                                        :data="details">
+                                <form role="form">
+                                    <div class="row align-items-center">
+                                        <div class="col">
+                                            <div class="form-group">
+                                                <label class="form-control-label">1. Select Lead Type: </label>
+                                                <v-select :options="leadtypes" 
+                                                        :reduce="leadtype => leadtype.id"
+                                                        v-model="leadtype_id"
+                                                        class="required"
+                                                        label="name"  />
+                                            </div>
+                                        </div>
 
-                                <template v-if="leadtype_id != null" slot="columns">
-                                    <th v-for="(field, index) in fields" :key="index">{{ field.name }}</th>
-                                   
-                                </template>
+                                        <div class="col">
+                                            <label class="form-control-label">2. Select CSV file: </label>
+                                            <base-input 
+                                                class="input-group-alternative"
+                                                disabled=""
+                                                id="file-uploader"
+                                                accept=".csv"
+                                                @change="onFileChange"
+                                                type="file"/>
+                
+                                        </div>
+                                    </div>
 
-                                <template slot-scope="{row}">
-                                    <td class="budget" v-for="(data, index) in row" :key="index">
-                                        {{data}}
-                                    </td>
-                                    
-                                   
-                                </template>
+                                    <div class="row justify-content-end">
+                                        <div class="col-4">
+                                            <base-button type="default" size="lg">Import Leads</base-button>
+                                        </div>
+                                        <p class="lead">
 
-                            </base-table>
+                                        </p>
+                                    </div>
+                                </form>
+                            
                         </div>
+                      
                        
-
-                        <div class="card-footer bg-transparent">
-                        </div>
-
                     </div>
 
 
+                </div>
+
+                <div class="col-xl-4">
+                    <div class="card shadow">
+                        <div class="card-content">
+                           
+                                <div>
+                                    <h3 v-if="leadtype_id == null"><i class="fa fa-exclamation-circle" aria-hidden="true"></i> No Lead Type selected</h3>
+                                    <h2 v-else>{{ leadtype_name }} Headers:</h2>
+                                </div>
+
+                                <div>
+                                    <ol>
+                                        <li v-for="(field, index) in fields" :key="index">{{ field.name }}</li>
+                                    </ol>
+                                </div>
+                            
+                        </div>
+                    </div>
                 </div>
             </div>
           
@@ -100,6 +109,12 @@
         this.$store.dispatch('leadtypes/fetchLeadTypes');
     },
 
+    watch: {
+        leadtype_id: function(value) {
+            this.fileButtonStatus(value);
+        }
+    },
+
     computed: {
         ...mapGetters({
             user: 'auth/user',
@@ -126,6 +141,10 @@
                 return [];
             }
 
+        },
+
+        leadtype_name: function() {
+            return (this.leadtype_id != null) ? this.leadtype(this.leadtype_id).name : "";
         }
     },
 
@@ -175,8 +194,32 @@
                         )
                     }
                 });
+        },
+
+        fileButtonStatus(id) {
+            const filebtn = document.getElementById('file-uploader');
+            if (id != null) {
+                // enable button
+                filebtn.removeAttribute("disabled");
+            } else {
+                filebtn.setAttribute("disabled", "true");
+            }
         }
     }
   };
 </script>
-<style></style>
+
+<style>
+    .page-table-card {
+        min-height: 70vh;
+    }
+
+    .card-content {
+        padding: 4rem 2rem;
+    }
+
+    .v-select .vs--single .vs--searchable .required {
+        border: solid 1px #f5365c;
+        border-radius: 4px !important;
+    }
+</style>
