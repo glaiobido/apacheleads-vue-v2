@@ -71,7 +71,7 @@
         methods: {
             login() {
                 this.$store.dispatch('auth/login', this.form).then(response => {
-                    this.$router.push({name: 'dashboard'});
+                    this.$router.replace({name: 'dashboard'});
                 });
             }
         }

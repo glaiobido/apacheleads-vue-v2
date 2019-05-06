@@ -106,8 +106,7 @@
 
         async saveUser() {
             await this.$store.dispatch('users/register', this.form).then(response => {
-               console.log("register: ", response);
-            
+                this.$router.go({name: 'dashboard'});
             });
         }
     }
