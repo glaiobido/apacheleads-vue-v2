@@ -63,13 +63,13 @@ export const actions = {
     async register({ commit, dispatch }, payload) {
 
         axios.post('/users', payload).then((response) => {
-            const { user } = response.data;
-            console.log("TEST ", user)
+            const { user, token } = response.data;
+            localStorage.setItem('token', token);
+            
             return user;
-            // console.log("TEST ", user)
         })
         .catch((e) => {
-              // this.$router.push({name: 'login'});
+              
         });
     }
 }

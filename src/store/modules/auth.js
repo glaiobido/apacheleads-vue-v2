@@ -27,14 +27,14 @@ export const mutations = {
 
   [types.FETCH_USER_FAILURE] (state) {
     state.token = null
-    localStorage.remove('token')
+    localStorage.removeItem('token')
   },
 
   [types.LOGOUT] (state) {
     state.user = null
     state.token = null
 
-    localStorage.remove('token')
+    localStorage.removeItem('token')
   },
 
   [types.UPDATE_USER] (state, { user }) {
