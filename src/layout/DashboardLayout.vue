@@ -18,6 +18,7 @@
         <sidebar-item :link="{name: 'Leads', icon: 'ni ni-money-coins text-default', path: '/leads'}"/>
         <sidebar-item :link="{name: 'Lead Types', icon: 'ni ni-basket text-default', path: '/lead-types'}"/>
         <sidebar-item :link="{name: 'Orders', icon: 'ni ni-delivery-fast text-default', path: '/orders'}"/>
+        <sidebar-item :link="{name: 'Customers', icon: 'fa fa-users text-default', path: '/customers'}"/>
       
 
       </template>

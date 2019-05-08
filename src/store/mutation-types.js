@@ -17,4 +17,7 @@ export const FETCH_LEAD_SUCCESS = 'FETCH_LEAD_SUCCESS';
 // users.js
 export const FETCH_ALL_USERS = 'FETCH_ALL_USERS';
 export const FETCH_ALL_ADMINS = 'FETCH_ALL_ADMINS';
-export const FETCH_ALL_CUSTOMERS = 'FETCH_ALL_ADMINS';
+export const FETCH_ALL_CUSTOMERS = 'FETCH_ALL_CUSTOMERS';
+
+// countries.js
+export const FETCH_COUNTRIES = 'FETCH_COUNTRIES';

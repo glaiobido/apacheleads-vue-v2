@@ -41,20 +41,19 @@ export const mutations = {
 // actions
 export const actions = {
 
-//   async fetchUser ({ commit }) {
-//     try {
-//       const { data } = await axios.get('/user');
-//       console.log("HERE: ", data)
-//       commit(types.FETCH_USER_SUCCESS, { user: data })
-//     } catch (e) {
-//       commit(types.FETCH_USER_FAILURE)
-//     }
-//   },
-
     async fetchAllUsers({commit}) {
         try {
             const { data } = await axios.get('/users');
-            commit(types.FETCH_ALL_USERS, { users: data })
+            commit(types.FETCH_ALL_USERS, { users: data });
+        } catch(e) {
+
+        }
+    },
+
+    async fetchAllCustomers({commit}) {
+        try {
+            const { data } = await axios.get('/customers');
+            commit(types.FETCH_ALL_CUSTOMERS, { users: data });
         } catch(e) {
 
         }
