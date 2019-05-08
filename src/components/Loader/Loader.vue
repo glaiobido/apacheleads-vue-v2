@@ -1,12 +1,13 @@
 <template>
         <loading :active.sync="isLoading" 
-        :can-cancel="true" 
-        :on-cancel="onCancel"
-        loader="dots"
-        color="#233dd2"
-        :height="150"
-        :width="150"
-        :is-full-page="fullPage"></loading>
+            :can-cancel="false" 
+            :on-cancel="onCancel"
+            loader="dots"
+            color="#233dd2"
+            :height="150"
+            :width="150"
+            :is-full-page="fullPage"></loading>
+        
         
 </template>
 
@@ -18,10 +19,10 @@
     
     export default {
         name: "page-spinner",
-        props: ['isLoading'],
+        props: ['isLoading', 'fullPage'],
         data() {
             return {
-                fullPage: false
+               
             }
         },
         components: {
