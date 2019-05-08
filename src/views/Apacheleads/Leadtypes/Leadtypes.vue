@@ -1,6 +1,7 @@
 <template>
     <div>
         <base-header type="gradient-default" class="pb-6 pb-8 pt-5 pt-md-8"></base-header>
+        <page-spinner :fullPage="true" :isLoading="activateSpinner"></page-spinner>
 
         <div class="container-fluid mt--9">
             <div class="row">
@@ -23,38 +24,58 @@
                             </div>
                         
                          <div class="card-body">
-                           
-                            <div class="table-responsive">
-                                <vuetable ref="vuetable"
-                                    :css="css.table"
-                                    :fields="fields"
-                                    :api-mode="false"
-                                    :data-manager="tableDataMgr"
-                                    pagination-path="pagination"
-                                    @vuetable:pagination-data="onPaginationData"
-                                >
-                                <div slot="actions" slot-scope="props">
-                                    <base-button
-                                            @click="triggerEditModal(props.rowData.id)"
-                                            type="default" 
-                                            class="my--1">Edit</base-button>
-                                    <base-button type="warning" 
-                                                     outline 
-                                                     class="my--1" 
-                                                     @click="deleteLeadType(props.rowData.id)">Delete</base-button>
-                                   
+                            
+                            <div class="row">
+                                <div class="col">
+                                    <el-table
+                                        :data="tabledata.filter(data => !search || data.name.toLowerCase().includes(search.toLowerCase()))"
+                                        style="width: 100%"
+                                        height="400"
+                                        empty-text="No Data Available">
+
+                                        <el-table-column
+                                            sortable
+                                            label="ID"
+                                            prop="id">
+                                        </el-table-column>
+
+                                        <el-table-column
+                                            sortable
+                                            label="Name"
+                                            prop="name">
+                                        </el-table-column>
+
+                                    
+                                        <el-table-column
+                                            align="right">
+
+                                        <template slot="header" slot-scope="scope">
+                                            <el-input
+                                            v-model="search"
+                                            size="mini"
+                                            placeholder="Search Lead Type"/>
+                                        </template>
+
+                                        <template slot-scope="scope">
+                                            <el-button
+                                                type="primary"
+                                                id="edit-btn-primary"
+                                                @click="triggerEditModal(scope.row.id)">Edit</el-button>
+                                            <el-button
+                                                type="danger"
+                                                @click="deleteLeadType(scope.row.id)">Delete</el-button>
+                                        </template>
+
+                                        </el-table-column>
+                                    </el-table>
                                 </div>
-                                </vuetable>
                                
                             </div>
 
                         </div>
 
                         <div class="card-footer d-flex justify-content-end bg-transparent">
-                            <vuetable-pagination ref="pagination"
-                                @vuetable-pagination:change-page="onChangePage"
-                                :css="css.pagination"
-                            ></vuetable-pagination>
+                          
                         </div>
 
                     </div>
@@ -64,6 +85,8 @@
             </div>
           
         </div>
+
+
         <add-lead-type-modal :showModal="showAddModal" @closeModal="showAddModal=false"></add-lead-type-modal>
         <edit-lead-type-modal 
             :showModal="showEditModal"
@@ -78,61 +101,46 @@
   import ProjectsTable from '../../Tables/ProjectsTable';
   import AddLeadTypeModal from './AddLeadTypeModal'
   import EditLeadTypeModal from './EditLeadTypeModal';
-  import Vuetable from 'vuetable-2';
-  import VuetablePagination from "vuetable-2/src/components/VuetablePagination";
-  import VueTableCustomStyle from "./VueTableCustomStyle.js";
-  import _ from "lodash";
 
 
     export default {
         name: 'tables',
         components: {
             AddLeadTypeModal,
-            EditLeadTypeModal,
-            Vuetable,
-            VuetablePagination
+            EditLeadTypeModal
         },
 
         created() {
+            this.activateSpinner = true;
             this.$store.dispatch('leadtypes/fetchLeadTypes').then(response => {
                 this.tabledata = this.leadtypes;
                 console.log("created hook: ", this.tabledata)
+                this.activateSpinner = false;
+                
             });
         },
 
         watch: {
-            tabledata (val) {
-                console.log("table watch ", val);
-                this.$refs.vuetable.reload();
-            },
+            // tabledata (val) {
+            //     // this.$refs.vuetable.reload();
+            //     this.activateSpinner = false;
+            // },
             leadtypes() {
+                this.activateSpinner = true;
                 this.tabledata = this.leadtypes;
-                this.$refs.vuetable.reload();
+                // this.$refs.vuetable.reload();
             }
         },
 
         data() {
             return {
+                activateSpinner: false,
                 showAddModal: false,
                 showEditModal: false,
                 id: 0,
                 tablePerPage: 10,
-                css: VueTableCustomStyle,
                 tabledata: [],
-                fields: [
-                    {
-                        name: 'id',
-                        sortField: 'id'  
-                    },
-                    {
-                        name: 'name',
-                        sortField: 'name'  
-                    },
-                    {
-                        name: 'actions',
-                        sortField: 'name'  
-                    }
-                ]
+                search: ''
             }
         },
 
@@ -171,49 +179,9 @@
                         )
                     }
                 });
-            },
+            }
 
-            tableDataMgr(sortOrder, pagination) {
-                if (this.tabledata.length < 1) return;
-               
-                let local = this.tabledata;
-
-                if (sortOrder.length > 0) {
-                    console.log("orderBy:", sortOrder[0].sortField, sortOrder[0].direction);
-                    local = _.orderBy(
-                        local,
-                        sortOrder[0].sortField,
-                        sortOrder[0].direction
-                    );
-                }
-
-                pagination = this.$refs.vuetable.makePagination(
-                    local.length,
-                    this.tablePerPage
-                );
-
-
-                let from = pagination.from - 1;
-                let to = from + this.tablePerPage;
-                console.log("tableDataMgr ",from)
-
-                let returnObj = {
-                    pagination: pagination,
-                    data: _.slice(local, from, to)
-
-                }
-                    console.log("table manager return : ", returnObj);
-                return returnObj;
-            },
-
-            async onPaginationData(paginationData) {
-                console.log("REF: ", this.$refs.pagination)
-                this.$refs.pagination.setPaginationData(paginationData);
-            },
-
-            onChangePage(page) {
-                this.$refs.vuetable.changePage(page);
-            },
+            
 
         }
 
@@ -226,5 +194,10 @@
 
     .page-table-card {
         min-height: 70vh;
+    }
+
+    #edit-btn-primary {
+        background-color: #162b4d !important;
+        border-color: #162b4d !important;
     }
 </style>
