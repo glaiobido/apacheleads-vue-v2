@@ -24,7 +24,7 @@ export const getters = {
 
 // mutations
 export const mutations = {
-  [types.FETCH_ALL_USERS_SUCCESS] (state, { users }) {
+  [types.FETCH_ALL_USERS] (state, { users }) {
     state.users = users;
   },
 
@@ -54,7 +54,7 @@ export const actions = {
     async fetchAllUsers({commit}) {
         try {
             const { data } = await axios.get('/users');
-            commit(types.FETCH_ALL_USERS_SUCCESS, { users: data })
+            commit(types.FETCH_ALL_USERS, { users: data })
         } catch(e) {
 
         }
