@@ -3,6 +3,7 @@ import App from './App.vue'
 import router from './router'
 import ArgonDashboard from './plugins/argon-dashboard'
 import './registerServiceWorker'
+import 'element-ui/lib/theme-chalk/index.css';
 // import 'es6-promise/auto'
 
 import axios from 'axios'
