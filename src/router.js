@@ -61,11 +61,10 @@ const router = new Router({
           name: 'orders',
           component: () => import(/* webpackChunkName: "demo" */ './views/Apacheleads/Orders/Orders.vue')
         },
-        
         {
-          path: '/tables',
-          name: 'tables',
-          component: () => import(/* webpackChunkName: "demo" */ './views/Tables.vue')
+          path: '/customers',
+          name: 'customers',
+          component: () => import(/* webpackChunkName: "demo" */ './views/Apacheleads/Customers/Customers.vue')
         }
       ]
     },
