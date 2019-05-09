@@ -11,7 +11,7 @@
                     <div class="text-center text-muted mb-4">
                         <h1 class="display-4"><i class="fa fa-user-plus" aria-hidden="true"></i>   New Customer</h1>
                     </div>
-                    <form role="form" @submit="saveNewCustomer()">
+                    <form role="form" @submit.prevent="saveNewCustomer()">
                         <div class="row">
                             <div class="col">
                                 <div class="form-group">
@@ -90,9 +90,10 @@
                                 <div class="form-group">
                                     <div class="form-group">
                                         <label class="form-control-label">Country</label>
-                                        <v-select :options="leadtypes" 
+                                        <v-select :options="countries"
+                                                :reduce="country => country.country_code" 
                                                 v-model="form.country"
-                                                label="name"  />
+                                                label="country"  />
                                         <small class="form-text text-muted"></small>
                                     </div>
                                     <small class="form-text text-muted"></small>
@@ -103,9 +104,10 @@
                                 <div class="form-group">
                                     <div class="form-group">
                                         <label class="form-control-label">State</label>
-                                        <v-select :options="leadtypes" 
+                                        <v-select :options="states"
+                                                :reduce="state => state.state_code"  
                                                 v-model="form.state"
-                                                label="name"  />
+                                                label="state"  />
                                         <small class="form-text text-muted"></small>
                                     </div>
                                     <small class="form-text text-muted"></small>
@@ -120,7 +122,7 @@
                                 <div class="form-group">
                                     <div class="form-group">
                                         <label class="form-control-label">Home Address</label>
-                                        <textarea v-model="address1" rows="3" class="form-control"></textarea>
+                                        <textarea v-model="form.address1" rows="3" class="form-control"></textarea>
                                         <small class="form-text text-muted"></small>
                                     </div>
                                     <small class="form-text text-muted"></small>
@@ -131,7 +133,7 @@
                             <div class="col">
                                 <div class="form-group">
                                     <label class="form-control-label">Permanent Address</label>
-                                    <textarea v-model="address2" rows="3" class="form-control"></textarea>
+                                    <textarea v-model="form.address2" rows="3" class="form-control"></textarea>
                                     <small class="form-text text-muted"></small>
                                 </div>
                             
@@ -141,7 +143,10 @@
                         </div>
                         
                         <div class="text-center">
-                            <base-button type="default" class="my-4" @click="saveNewCustomer()">Save</base-button>
+                            <base-button
+                                nativeType="submit" 
+                                type="default" 
+                                class="my-4">Save</base-button>
                             <base-button type="secondary" class="my-4" @click="$emit('closeModal')">Cancel</base-button>
                         </div>
                     </form>
@@ -158,6 +163,7 @@ import "flatpickr/dist/flatpickr.css";
 import vSelect from 'vue-select';
 import 'vue-select/dist/vue-select.css';
 import axios from 'axios';
+import { mapGetters } from 'vuex';
 
 export default {
     props: ['showModal'],
@@ -186,18 +192,27 @@ export default {
 
     },
 
-    methods: {
-        addField() {
-            this.form.fields.push({
-                name: ''
-            })
-        },
-        removeField(index) {
-            this.form.fields.splice(index, 1);
-        },
+    watch: {
+        'form.country': function(value) {
+            this.$store.dispatch('countries/fetchStates', {'country': value});
+        }
+    },
 
-        saveNewCustomer() {
-            axios.post('/leadtypes', this.form).then((reponse) => {
+    computed: {
+        ...mapGetters({
+            user: 'auth/user',
+            leadtypes: 'leadtypes/leadtypes',
+            customers: 'users/customers',
+            countries: 'countries/countries',
+            states: 'countries/states'
+        })
+    },
+
+    methods: {
+
+        async saveNewCustomer() {
+            
+            axios.post('/customers', this.form).then((reponse) => {
                  this.$swal({
                     title: 'Success!',
                     text: 'Lead Type has been added successfully',
@@ -205,7 +220,7 @@ export default {
                     confirmButtonText: 'Ok'
                 })
                 .then((result) => {
-                    this.$store.dispatch('leadtypes/fetchLeadTypes');
+                    this.$store.dispatch('users/fetchAllCustomers');
                     this.$emit('closeModal')
                 });
             })
@@ -216,3 +231,10 @@ export default {
     }
 };
 </script>
+<style>
+    .vs__dropdown-toggle {
+        padding: 6px;
+        background-color: #fff;
+    }
+    
+</style>
