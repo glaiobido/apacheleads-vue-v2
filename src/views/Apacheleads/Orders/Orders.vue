@@ -1,7 +1,7 @@
 <template>
     <div>
         <base-header type="gradient-default" class="pb-6 pb-8 pt-5 pt-md-8"></base-header>
-
+        <page-spinner :fullPage="true" :isLoading="activateSpinner"></page-spinner>
         <div class="container-fluid mt--9">
             <div class="row">
                 <div class="col">
@@ -116,6 +116,7 @@
 
         data() {
             return {
+                activateSpinner: false,
                 showAddModal: false,
                 showEditModal: false,
                 id: 0,
