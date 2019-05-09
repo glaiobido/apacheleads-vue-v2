@@ -17,6 +17,9 @@ export const getters = {
   },
 
   customers: state => state.customers,
+  customer: state => (id) => {
+    return state.customers.find(customer => customer.id == id);
+  },
 
   admin: state => state.admins
 

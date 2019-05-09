@@ -21,3 +21,4 @@ export const FETCH_ALL_CUSTOMERS = 'FETCH_ALL_CUSTOMERS';
 
 // countries.js
 export const FETCH_COUNTRIES = 'FETCH_COUNTRIES';
+export const FETCH_STATES = 'FETCH_STATES';
