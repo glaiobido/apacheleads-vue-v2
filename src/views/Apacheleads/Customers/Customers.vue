@@ -70,7 +70,7 @@
                                                 @click="triggerEditModal(scope.row.id)">Edit</el-button>
                                             <el-button
                                                 type="danger"
-                                                @click="deleteLeadType(scope.row.id)">Delete</el-button>
+                                                @click="deleteCustomer(scope.row.id)">Delete</el-button>
                                         </template>
 
                                         </el-table-column>
@@ -96,6 +96,11 @@
         <new-customer-modal 
             :showModal="showAddModal" 
             @closeModal="showAddModal=false"></new-customer-modal>
+        
+        <edit-customer-modal 
+            :showModal="showEditModal"
+            :customerID="id" 
+            @closeModal="showEditModal=false"></edit-customer-modal>
     </div>
 </template>
 
@@ -103,22 +108,25 @@
   import axios from 'axios';
   import { mapGetters } from 'vuex';
   import NewCustomerModal from './NewCustomerModal.vue';
+  import EditCustomerModal from './EditCustomerModal.vue';
 
 
     export default {
         name: 'tables',
         components: {
-           NewCustomerModal
+           NewCustomerModal,
+           EditCustomerModal
         },
 
         created() {
             this.activateSpinner = true;
             this.$store.dispatch('users/fetchAllCustomers').then(response => {
                 this.tabledata = this.customers;
-                console.log("created hook: ", this.tabledata)
-                this.activateSpinner = false;
-                
+                this.$store.dispatch('countries/fetchCountries');
             });
+            this.activateSpinner = false;
+                
+
         },
 
         watch: {
@@ -126,6 +134,7 @@
             customers() {
                 this.activateSpinner = true;
                 this.tabledata = this.customers;
+                this.activateSpinner = false;
             }
         },
 
@@ -145,16 +154,18 @@
             ...mapGetters({
                 user: 'auth/user',
                 leadtypes: 'leadtypes/leadtypes',
-                customers: 'users/customers'
+                customers: 'users/customers',
+                countries: 'countries/countries'
             })
         },
 
         methods: {
-            triggerEditModal() {
-              
+            triggerEditModal(customer_id) {
+                this.id = customer_id;
+                this.showEditModal = true;
             },
 
-            async deleteLeadType() {
+            async deleteCustomer(customer_id) {
 
                 this.$swal({
                     title: 'Are you sure?',
@@ -166,12 +177,13 @@
                     confirmButtonText: 'Yes, delete it!'
                 }).then((result) => {
                     if (result.value) {
-                        // axios.delete(`/leadtypes/${lead_type_id}`).then(response => {
-                        // //    this.$store.dispatch('leadtypes/fetchLeadTypes');
-                        // });
+                        
+                        axios.delete(`/customers/${customer_id}`).then(response => {
+                           this.$store.dispatch('users/fetchAllCustomers');
+                        });
                         this.$swal(
                             'Deleted!',
-                            'Your file has been deleted.',
+                            'Customer has been deleted.',
                             'success'
                         )
                     }

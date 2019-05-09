@@ -1,14 +1,14 @@
 <template>
     <div>
         <base-header type="gradient-default" class="pb-6 pb-8 pt-5 pt-md-8"></base-header>
-
+        <page-spinner :fullPage="true" :isLoading="activateSpinner"></page-spinner>
         <div class="container-fluid mt--9">
             <div class="row">
                 <div class="col-xl-8 mb-5 mb-xl-0">
                     <div class="card shadow page-table-card">
                         
                         <div class="card-content">
-                            <h1 class="display-4">Hello, {{ user.firstname }}!</h1>
+                            <h1 class="display-4">Hello, {{ user && user.firstname ? user.firstname : "" }}!</h1>
                             <p class="lead">Please Select your CSV File of Leads to import.</p>
                             <p>Take note of the following before uploading your file:</p>
                             <ul>
@@ -44,7 +44,7 @@
                                         </div>
                                     </div>
 
-                                    <div class="row justify-content-end">
+                                    <div class="row">
                                         <div class="col-4">
                                             <base-button type="default" size="lg">Import Leads</base-button>
                                         </div>
@@ -73,7 +73,7 @@
 
                                 <div>
                                     <ol>
-                                        <li v-for="(field, index) in fields" :key="index">{{ field.name }}</li>
+                                        <li v-for="(field, index) in fields" :key="index">{{ field }}</li>
                                     </ol>
                                 </div>
                             
@@ -102,7 +102,8 @@
         file: null,
         leadtype_id: null,
         imported_data: [],
-        importbtn: false
+        importbtn: false,
+        activateSpinner: false
       }
     },
     created() {
@@ -112,6 +113,8 @@
     watch: {
         leadtype_id: function(value) {
             this.fileButtonStatus(value);
+
+
         }
     },
 
@@ -122,9 +125,6 @@
             leadtype: 'leadtypes/leadtype'
         }),
 
-        fields: function() {
-            return (this.leadtype_id != null) ? this.leadtype(this.leadtype_id).fields : [];
-        },
 
         details: function() {
             if (this.imported_data.length > 0) {
@@ -145,6 +145,10 @@
 
         leadtype_name: function() {
             return (this.leadtype_id != null) ? this.leadtype(this.leadtype_id).name : "";
+        },
+
+        fields: function() {
+            return (this.leadtype_id != null) ? this.leadtype(this.leadtype_id).fields : ['test'];
         }
     },
 
@@ -158,7 +162,7 @@
                 formData.append('file', this.file);
                 formData.append('leadtype_id', this.leadtype_id);
             let self = this;
-
+                this.activateSpinner = true;
                 axios.post('/leads/import', formData, {
                     headers: {
                         'Content-Type': 'multipart/form-data'
@@ -167,7 +171,8 @@
                     const { data } = response;
                     console.log("response " , data.import_data)
 
-                    self.imported_data =data.import_data;
+                    self.imported_data = data.import_data;
+                    self.activateSpinner = false;
                     
                 })
                 .catch(function(){
