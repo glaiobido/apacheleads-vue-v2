@@ -1,5 +1,7 @@
 <template>
-     <div class="row">
+<div>
+    <div class="row">
+        
         <div class="col">
             <el-table
                 :data="tabledata"
@@ -9,15 +11,17 @@
 
                 <el-table-column
                     sortable
-                    v-for="(field, index) in leadtype(leadtype_id).fields" :key="index"
+                    v-for="(field, index) in formatted_fields" :key="index"
+                    :prop="field.name"
                     :label="field.name">
                 </el-table-column>
-
-
             </el-table>
         </div>
         
     </div>
+
+    
+</div>
 </template>
 
 <script>
@@ -44,9 +48,24 @@ export default {
             leadtype_id: 'leadtypes/leadtype_id',
         }),
 
-        tabledata() {
-            const {data} = this.importResponse;
+        formatted_fields() {
+            let newFields = [];
+            newFields = this.leadtype(this.leadtype_id).fields.map(data => {
+                let obj = {};
+                obj.name = data.name.replace(/ /g,"_");
+                obj.id = data.id;
+                obj.order = data.order,
+                obj.lead_type_id = data.lead_type_id;
+                return obj;
+            });
 
+            return newFields;
+        },
+
+        tabledata() {
+            let returnData = [];
+            returnData = this.importResponse.map(data => data.info);
+            return returnData;
         }
     },
 

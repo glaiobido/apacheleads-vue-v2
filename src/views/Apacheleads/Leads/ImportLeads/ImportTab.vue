@@ -36,12 +36,6 @@
 
                 </div>
             </div>
-
-            <div class="row">
-                <div class="col text-right">
-                    <base-button type="default">Import Leads</base-button>
-                </div>
-            </div>
         </form>
     
 </div>
