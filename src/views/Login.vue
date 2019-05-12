@@ -1,5 +1,6 @@
 <template>
         <div class="row justify-content-center">
+        <page-spinner :fullPage="true" :isLoading="activateSpinner"></page-spinner>
             <div class="col-lg-5 col-md-7">
                 <div class="card bg-secondary shadow border-0">
                    
@@ -10,12 +11,15 @@
                         <div class="text-center text-muted mb-4">
                             <small>Sign in with credentials</small>
                         </div>
-                        <form role="form">
+                        <form role="form" @submit.prevent="login()">
                             <base-input class="input-group-alternative mb-3"
+                                        validationRule="'required|email'"
+                                        name="email"
                                         placeholder="Email"
                                         addon-left-icon="ni ni-email-83"
                                         v-model="form.email">
                             </base-input>
+                            <span>{{ errors.first('email') }}</span>
 
                             <base-input class="input-group-alternative"
                                         placeholder="Password"
@@ -29,7 +33,7 @@
                             </base-checkbox>
                             <div class="text-center">
                                 <base-button
-                                        @click="login()" 
+                                        nativeType="submit"
                                         type="primary" 
                                         class="my-4">Sign in</base-button>
                             </div>
@@ -48,13 +52,13 @@
         </div>
 </template>
 <script>
-    import axios from 'axios';
     import { mapGetters } from 'vuex';
     
     export default {
         name: 'login',
         data() {
             return {
+                activateSpinner: false,
                 form: {
                 email: '',
                 password: ''
@@ -69,8 +73,10 @@
         },
          
         methods: {
-            login() {
-                this.$store.dispatch('auth/login', this.form).then(response => {
+            async login() {
+                this.activateSpinner = true;
+                await this.$store.dispatch('auth/login', this.form).then(response => {
+                    this.activateSpinner = false;
                     this.$router.replace({name: 'dashboard'});
                 });
             }
