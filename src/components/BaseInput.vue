@@ -90,6 +90,11 @@ export default {
     addonLeftIcon: {
       type: String,
       description: "Addont left icon"
+    },
+    validationRule: {
+      type: String,
+      description: "Vee Validate Validation Rule",
+      default: ""
     }
   },
   data() {

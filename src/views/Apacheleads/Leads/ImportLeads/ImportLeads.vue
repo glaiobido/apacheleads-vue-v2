@@ -9,7 +9,9 @@
                     <div class="card shadow">
                         <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal" @select="handleSelect">
                             <el-menu-item index="import-tab-content">Import Leads</el-menu-item>
-                            <el-menu-item index="vald-leads-tab-content">Valid Leads</el-menu-item>
+                            <el-menu-item index="vald-leads-tab-content" :disabled="valid_data_count == 0">
+                                Valid Leads <span v-if="valid_data_count != 0" class="badge badge-success">{{ valid_data_count }}</span>
+                            </el-menu-item>
                             <el-menu-item index="bad-leads" disabled>Bad Leads</el-menu-item>
                             <el-menu-item index="duplicates" disabled>Duplicate Leads</el-menu-item>
                         </el-menu>
@@ -26,10 +28,17 @@
                             ></component>
                             </keep-alive>
                         </div>
-                      
+
+                        <div class="card-footer">
+                            <base-button
+                                    @click="saveValidLeads()"
+                                    v-if="activeIndex == 'vald-leads-tab-content'" 
+                                    type="default">Import Leads</base-button>
+                        </div>
+            
                        
                     </div>
-
+                
 
                 </div>
 
@@ -81,7 +90,9 @@
         activeIndex: 'import-tab-content',
         leadtype_fields: [],
         leadtype_name: "",
-        importResponse: null
+        importResponse: null,
+        valid_data_count: 0,
+        importError: false
       }
     },
     created() {
@@ -101,25 +112,7 @@
             leadtypes: 'leadtypes/leadtypes',
             leadtype: 'leadtypes/leadtype',
             leadtype_id: 'leadtypes/leadtype_id'
-        }),
-
-
-        details: function() {
-            if (this.imported_data.length > 0) {
-
-                return this.imported_data.map(data => {
-                    
-                    if (data.hasOwnProperty('info')) {
-                        return data.info;
-                    } else {
-                        return;
-                    }
-                })
-            } else {
-                return [];
-            }
-
-        }
+        })
         
     },
 
@@ -133,7 +126,34 @@
         },
 
         onImportEvent(event) {
-            this.importResponse = event || null;
+            const {import_data, valid_leads_count, error} = event;
+            this.importResponse = event ? import_data : null;
+            this.valid_data_count = event ? valid_leads_count : 0;
+            this.importError = error || false;
+            
+            if (this.importError == false) {
+                this.activeIndex ='vald-leads-tab-content';
+            }
+        },
+        
+        async saveValidLeads() {
+            let payload = {
+                data: this.importResponse
+            };
+            axios.post('/leads', payload).then((reponse) => {
+                 this.$swal({
+                    title: 'Success!',
+                    text: 'Valid Leads have been saved successfully',
+                    type: 'success',
+                    confirmButtonText: 'Ok'
+                })
+                .then((result) => {
+                    // this.$store.dispatch('leadtypes/fetchLeadTypes');
+                });
+            })
+            .catch((e) => {
+                    
+            });
         }
     }
   };

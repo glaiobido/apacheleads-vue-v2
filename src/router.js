@@ -51,7 +51,7 @@ const router = new Router({
         {
           path: '/import-leads',
           name: 'import leads',
-          component: () => import(/* webpackChunkName: "demo" */ './views/Apacheleads/Leads/ImportLeads.vue'),
+          component: () => import(/* webpackChunkName: "demo" */ './views/Apacheleads/Leads/ImportLeads/ImportLeads.vue'),
           meta: {
             pageTitle: 'Import New Leads'
           }

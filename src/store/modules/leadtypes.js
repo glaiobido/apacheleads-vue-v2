@@ -11,6 +11,7 @@ export const state = {
 // getters
 export const getters = {
     leadtypes: state => state.leadtypes,
+    leadtype_id: state => state.id,
     leadtype: state => (lead_type_id) => {
         return state.leadtypes.find(leadtype => leadtype.id == lead_type_id)
     }
@@ -24,6 +25,10 @@ export const mutations = {
 
   [types.FETCH_LEADTYPE_SUCCESS] (state, { leadtype }) {
     state.leadtype = leadtype
+  },
+
+  setLeadTypeID(state, {id}) {
+    state.id = id;
   }
 
 }
@@ -38,5 +43,9 @@ export const actions = {
         } catch (e) {
         
         }
+    },
+
+    async assignLeadtypeID({commit}, payload) {
+      commit('setLeadTypeID', payload);
     }
 }
