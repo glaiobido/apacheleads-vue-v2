@@ -201,7 +201,11 @@ export default {
         },
 
         'form.country': function(value) {
-            this.$store.dispatch('countries/fetchStates', {'country': value});
+            if (value != null) {
+                this.$store.dispatch('countries/fetchStates', {'country': value});
+            } else {
+                this.states = [];
+            }
         }
     },
 
@@ -229,7 +233,7 @@ export default {
             this.form.address1 = data.address1;
             this.form.address2 = data.address1;
             this.form.contact_no = data.contact_no;
-            this.form.country =  this.country(data.country).country || null;
+            this.form.country =  this.country(data.country).country_code || null;
             this.form.state = data.state;
         },
 
@@ -253,7 +257,6 @@ export default {
                     if (data.hasOwnProperty('errors')) {
                         const  invalidFields = Object.keys(data.errors);
                         
-
                     }
             });
         }
