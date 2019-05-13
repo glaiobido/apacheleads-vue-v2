@@ -60,8 +60,7 @@
                                         <el-table-column
                                             sortable
                                             v-for="(field, index) in formatted_fields" :key="index"
-                                            :fixed="index==0"
-                                            props="id"
+                                            :fixed="index == 0"
                                             :label="field"
                                             width="150">
                                         </el-table-column>
