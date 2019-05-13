@@ -43,9 +43,9 @@
                                     v-model="form.password_confirmation">
                         </base-input>
 
-                        <div class="text-muted font-italic">
+                        <!-- <div class="text-muted font-italic">
                             <small>password strength: <span class="text-success font-weight-700">strong</span></small>
-                        </div>
+                        </div> -->
 
                         <div class="row my-4">
                             <div class="col-12">
@@ -104,11 +104,32 @@
 
     methods: {
 
+        // async saveUser() {
+        //     await this.$store.dispatch('users/register', this.form).then(response => {
+        //         this.$router.go({name: 'dashboard'});
+        //     });
+        // },
+
         async saveUser() {
-            await this.$store.dispatch('users/register', this.form).then(response => {
-                this.$router.go({name: 'dashboard'});
+            axios.post('/users', this.form).then((reponse) => {
+                 this.$swal({
+                    title: 'Success!',
+                    text: 'Account has been registered successfully',
+                    type: 'success',
+                    confirmButtonText: 'Ok'
+                })
+                .then((result) => {
+                    this.$router.replace({name: 'login'});
+                    // this.$store.dispatch('users/users');
+                    // this.$emit('closeModal')
+                });
+            })
+            .catch((e) => {
+                    
             });
         }
+
+        
     }
   }
 </script>
