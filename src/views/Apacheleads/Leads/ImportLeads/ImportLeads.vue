@@ -139,7 +139,8 @@
         async saveValidLeads() {
             let payload = {
                 data: this.importResponse
-            };
+            },
+            self = this;
             axios.post('/leads', payload).then((reponse) => {
                  this.$swal({
                     title: 'Success!',
@@ -148,6 +149,7 @@
                     confirmButtonText: 'Ok'
                 })
                 .then((result) => {
+                    // this.$router.go('/import-leads');
                     // this.$store.dispatch('leadtypes/fetchLeadTypes');
                 });
             })
