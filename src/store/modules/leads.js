@@ -19,7 +19,7 @@ export const getters = {
 // mutations
 export const mutations = {
   [types.FETCH_LEAD_SUCCESS] (state, { leads }) {
-    state.leadtype = leadtype
+    state.leads = leads;
   }
 
 }
@@ -31,6 +31,14 @@ export const actions = {
         try {
             const { data } = await axios.get('/leads');
             commit(types.FETCH_LEAD_SUCCESS, { leads: data })
+        } catch (e) {
+        
+        }
+    },
+
+    async setFetchedLeads({commit}, payload) {
+        try {
+            commit(types.FETCH_LEAD_SUCCESS, { leads: payload })
         } catch (e) {
         
         }
