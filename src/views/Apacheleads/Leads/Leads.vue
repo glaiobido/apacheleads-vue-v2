@@ -49,20 +49,23 @@
                         </div>
 
                         <div class="card-body" >
+                            
                             <div class="row">
                                 <div class="col">
                                     <el-table
                                         :data="leads"
                                         style="width: 100%"
                                         height="400"
+                                        stripe
                                         empty-text="No Data Available">
 
                                         <el-table-column
                                             sortable
                                             v-for="(field, index) in formatted_fields" :key="index"
                                             :fixed="index == 0"
-                                            :label="field"
-                                            width="150">
+                                            :label="field.name"
+                                            :prop="field.code"
+                                            width="200">
                                         </el-table-column>
                                     </el-table>
                                 </div>
@@ -121,16 +124,27 @@
             ...mapGetters({
                 user: 'auth/user',
                 leadtypes: 'leadtypes/leadtypes',
-                leadtype_id: 'leadtypes/leadtype_id',
+                leadtype: 'leadtypes/leadtype',
+                // leadtype_id: 'leadtypes/leadtype_id',
                 leads: 'leads/leads'
             }),
 
-            formatted_fields() {
-                if (this.leads.length > 0) {
-                    return Object.keys(this.leads[0]);
+
+            formatted_fields: function() {
+                let newFields = [];
+                if (this.leads.length > 0 && this.form.leadtype_id != null) {
+                  
+                    newFields =  Object.keys(this.leads[0]).map(data => {
+                        let obj = {};
+                        obj.code = data;
+                        obj.name = data.toUpperCase().replace(/_/g, " ");
+                        return obj;
+                    });
+
+                    return newFields;
                 }
 
-                return [];
+                return newFields;
             }
         },
 
@@ -138,7 +152,6 @@
             async fetchLeads() {
                 
                 let self = this;
-                console.log("submit get: ", this.form)
                 this.activateSpinner = true;
                 axios.get('/leads', {params: this.form}).then((response) => {
                     let {data} = response;
