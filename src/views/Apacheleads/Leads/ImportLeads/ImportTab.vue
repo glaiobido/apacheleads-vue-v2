@@ -5,9 +5,9 @@
         <p class="lead">Please Select your CSV File of Leads to import.</p>
         <p>Take note of the following before uploading your file:</p>
         <ul>
-            <li>Choose a Lead Type for this import.</li>
-            <li>Row Headings in your file is required.</li>
-            <li>Columns should be in the same order as listed upon selecting your Lead Type</li>
+            <li>Choose a <b>Lead Type</b> for this import.</li>
+            <li><b>Row Headings</b> in your file are <b>required</b>.</li>
+            <li>Columns <b>should be in the same order</b> as listed upon selecting your Lead Type</li>
         </ul>
         <hr class="my-4">
                             
