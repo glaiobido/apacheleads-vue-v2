@@ -9,7 +9,7 @@
                     <div class="card shadow">
                         <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal" @select="handleSelect">
                             <el-menu-item index="import-tab-content">Import Leads</el-menu-item>
-                            <el-menu-item index="vald-leads-tab-content" :disabled="valid_data_count == 0">
+                            <el-menu-item index="vald-leads-tab-content" :disabled="importError || valid_data_count == 0">
                                 Valid Leads <span v-if="valid_data_count != 0" class="badge badge-success">{{ valid_data_count }}</span>
                             </el-menu-item>
                             <el-menu-item index="bad-leads" disabled>Bad Leads</el-menu-item>
@@ -18,6 +18,11 @@
                         <div class="line"></div>
                             
                         <div class="card-content">
+
+                            <base-alert type="danger" v-show="statusMessage != null">
+                                <strong><i class="fa fa-exclamation-circle" aria-hidden="true"></i> Invalid Import.</strong> {{ statusMessage }} Please Review your file's Row Headings and heading order.
+                            </base-alert>
+
                             <keep-alive>
                             <component
                                 v-bind:is="activeIndex"
@@ -55,7 +60,7 @@
                                     <ul  
                                         v-if="leadtype_fields.length != 0" 
                                         class="list-group list-group-flush border" style="height: 400px; overflow-y:scroll">
-                                        <li v-for="(field, index) in leadtype_fields" :key="index" class="list-group-item">{{field.order}} {{ field.name }}</li>
+                                        <li v-for="(field, index) in leadtype_fields" :key="index" class="list-group-item">{{field.order}}. {{ field.name }}</li>
                                         
                                     </ul>
                                 </div>
@@ -92,7 +97,8 @@
         leadtype_name: "",
         importResponse: null,
         valid_data_count: 0,
-        importError: false
+        importError: false,
+        statusMessage: null
       }
     },
     created() {
@@ -126,14 +132,31 @@
         },
 
         onImportEvent(event) {
-            const {import_data, valid_leads_count, error} = event;
+            const {import_data, valid_leads_count, error, error_code, status_message} = event;
             this.importResponse = event ? import_data : null;
             this.valid_data_count = event ? valid_leads_count : 0;
             this.importError = error || false;
+            this.statusMessage = status_message || null;
+            
             
             if (this.importError == false) {
-                this.activeIndex ='vald-leads-tab-content';
+                this.activeIndex = 'vald-leads-tab-content';
+            } else {
+
+                switch(error_code) {
+                    case 'col_err': 
+                        this.$swal({
+                            title: 'Header Error',
+                            text: status_message,
+                            type: 'error',
+                            confirmButtonColor: '#172b4d',
+                            confirmButtonText: 'Ok'
+                        });
+                        break;
+                }
             }
+
+            
         },
         
         async saveValidLeads() {
