@@ -9,26 +9,29 @@
                     <div class="card shadow">
                         <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal" @select="handleSelect">
                             <el-menu-item index="import-tab-content">Import Leads</el-menu-item>
-                            <el-menu-item index="vald-leads-tab-content" :disabled="importError || valid_data_count == 0">
+                            <el-menu-item index="vald-leads-tab-content" :disabled="valid_data_count == 0">
                                 Valid Leads <span v-if="valid_data_count != 0" class="badge badge-success">{{ valid_data_count }}</span>
                             </el-menu-item>
-                            <el-menu-item index="bad-leads" disabled>Bad Leads</el-menu-item>
-                            <el-menu-item index="duplicates" disabled>Duplicate Leads</el-menu-item>
+                            <el-menu-item index="bad-leads-tab-content" :disabled="bad_leads_count == 0">
+                                Bad Leads <span v-if="bad_leads_count != 0" class="badge badge-danger">{{ bad_leads_count }}</span></el-menu-item>
+                            <el-menu-item index="duplicate-leads-tab-content" :disabled="duplicate_leads_count == 0">
+                                Duplicate Leads <span v-if="duplicate_leads_count != 0" class="badge badge-danger">{{ duplicate_leads_count }}</span></el-menu-item>
                         </el-menu>
                         <div class="line"></div>
                             
                         <div class="card-content">
-
-                            <base-alert type="danger" v-show="statusMessage != null">
+                             <base-alert type="danger" v-show="this.statusMessage != null && valid_data_count == 0">
                                 <strong><i class="fa fa-exclamation-circle" aria-hidden="true"></i> Invalid Import.</strong> {{ statusMessage }} Please Review your file's Row Headings and heading order.
                             </base-alert>
-
+                          
                             <keep-alive>
                             <component
                                 v-bind:is="activeIndex"
                                 class="tab"
                                 ref="tab-contents"
                                 :importResponse="importResponse"
+                                :badLeads="badLeads"
+                                :duplicateLeads="duplicateLeads"
                                 @on-import="onImportEvent"
                             ></component>
                             </keep-alive>
@@ -39,6 +42,21 @@
                                     @click="saveValidLeads()"
                                     v-if="activeIndex == 'vald-leads-tab-content'" 
                                     type="default">Import Leads</base-button>
+                
+                            <!-- <el-popover
+                                v-if="activeIndex == 'bad-leads-tab-content'"
+                                placement="top-start"
+                                title="Export Bad Leads"
+                                width="200"
+                                trigger="hover"
+                                content="Export all bad leads that cannot be imported">
+                                
+                                <base-button
+                                    slot="reference"
+                                    @click="exportLeads()"
+                                    v-if="activeIndex == 'bad-leads-tab-content'" 
+                                    type="default">Export Leads</base-button>
+                            </el-popover> -->
                         </div>
             
                        
@@ -80,6 +98,8 @@
     import 'vue-select/dist/vue-select.css';
     import ImportTab from './ImportTab';
     import ValidLeadsTab from './ValidLeadsTab';
+    import BadLeadsTab from './BadLeadsTab';
+    import DuplicateLeadsTab from './DuplicateLeadsTab';
   
 
   export default {
@@ -87,7 +107,9 @@
     components: {
         vSelect,
         'import-tab-content': ImportTab,
-        'vald-leads-tab-content': ValidLeadsTab
+        'vald-leads-tab-content': ValidLeadsTab,
+        'bad-leads-tab-content': BadLeadsTab,
+        'duplicate-leads-tab-content': DuplicateLeadsTab
     },
     data() {
       return {
@@ -96,7 +118,11 @@
         leadtype_fields: [],
         leadtype_name: "",
         importResponse: null,
+        badLeads: null,
+        duplicateLeads: null,
         valid_data_count: 0,
+        bad_leads_count: 0,
+        duplicate_leads_count: 0,
         importError: false,
         statusMessage: null
       }
@@ -132,9 +158,13 @@
         },
 
         onImportEvent(event) {
-            const {import_data, valid_leads_count, error, error_code, status_message} = event;
-            this.importResponse = event ? import_data : null;
+            const {import_data, duplicates, duplicate_leads_count, bad_leads_count, bad_leads, valid_leads_count, error, error_code, status_message} = event;
+            this.importResponse = event ? import_data : [];
+            this.duplicateLeads = event ? duplicates : [];
+            this.badLeads = event ? bad_leads : [];
             this.valid_data_count = event ? valid_leads_count : 0;
+            this.duplicate_leads_count = event ? duplicate_leads_count : 0;
+            this.bad_leads_count = event ? bad_leads_count : 0;
             this.importError = error || false;
             this.statusMessage = status_message || null;
             
@@ -178,6 +208,21 @@
             })
             .catch((e) => {
                     
+            });
+        },
+
+        async exportLeads() {
+            let self = this;
+            this.activateSpinner = true;
+            axios.get('/leads/export', {params: this.badLeads}).then(function(response){
+                const { data } = response;
+                
+                self.activateSpinner = false;
+                
+                
+            })
+            .catch(function(e){
+                console.log('FAILURE!!', e);
             });
         }
     }
