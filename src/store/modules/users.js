@@ -68,7 +68,7 @@ export const actions = {
             const { user, token } = response.data;
             localStorage.setItem('token', token);
             
-            return user;
+            // return user;
         })
         .catch((e) => {
               
