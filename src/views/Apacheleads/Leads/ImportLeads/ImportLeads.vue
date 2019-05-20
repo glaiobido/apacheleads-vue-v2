@@ -43,8 +43,8 @@
                                     v-if="activeIndex == 'vald-leads-tab-content'" 
                                     type="default">Import Leads</base-button>
                 
-                            <!-- <el-popover
-                                v-if="activeIndex == 'bad-leads-tab-content'"
+                            <el-popover
+                                v-if="activeIndex == 'bad-leads-tab-content' || activeIndex == 'duplicate-leads-tab-content'"
                                 placement="top-start"
                                 title="Export Bad Leads"
                                 width="200"
@@ -54,9 +54,9 @@
                                 <base-button
                                     slot="reference"
                                     @click="exportLeads()"
-                                    v-if="activeIndex == 'bad-leads-tab-content'" 
+                                    v-if="activeIndex == 'bad-leads-tab-content' || activeIndex == 'duplicate-leads-tab-content'"
                                     type="default">Export Leads</base-button>
-                            </el-popover> -->
+                            </el-popover>
                         </div>
             
                        
@@ -214,10 +214,21 @@
         async exportLeads() {
             let self = this;
             this.activateSpinner = true;
-            axios.get('/leads/export', {params: this.badLeads}).then(function(response){
-                const { data } = response;
+            let leads = (this.activeIndex == "bad-leads-tab-content") ? JSON.stringify(this.badLeads) : JSON.stringify(this.duplicateLeads);
+
+            axios.get('/export-leads', { params: { "bad_leads": leads} }).then(function(response){
+                // const { data } = response;
+            
+                const url = window.URL.createObjectURL(new Blob([response.data]));
+                const link = document.createElement('a');
+                link.href = url;
+                let filename =  (self.activeIndex=="bad-leads-tab-content") ? 'bad_leads.csv' : 'duplicate_leads.csv';
+                link.setAttribute('download', 'badleads.csv');
+                document.body.appendChild(link);
+                link.click();
                 
                 self.activateSpinner = false;
+               
                 
                 
             })
