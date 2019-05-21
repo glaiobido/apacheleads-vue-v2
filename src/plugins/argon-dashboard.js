@@ -6,6 +6,7 @@ import SidebarPlugin from "@/components/SidebarPlugin/index";
 import NotificationPlugin from "@/components/NotificationPlugin/index";
 import VeeValidate from 'vee-validate';
 import ElementUI from 'element-ui';
+import VueMoment from 'vue-moment';
 
 
 export default {
@@ -16,5 +17,6 @@ export default {
     Vue.use(NotificationPlugin);
     Vue.use(VeeValidate);
     Vue.use(ElementUI);
+    Vue.use(VueMoment);
   }
 };
