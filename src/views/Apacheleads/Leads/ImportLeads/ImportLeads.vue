@@ -218,12 +218,14 @@
 
             axios.get('/export-leads', { params: { "bad_leads": leads} }).then(function(response){
                 // const { data } = response;
-            
+                
                 const url = window.URL.createObjectURL(new Blob([response.data]));
                 const link = document.createElement('a');
                 link.href = url;
-                let filename =  (self.activeIndex=="bad-leads-tab-content") ? 'bad_leads.csv' : 'duplicate_leads.csv';
-                link.setAttribute('download', 'badleads.csv');
+                let filename =  (self.activeIndex=="bad-leads-tab-content") ? 'bad_leads' : 'duplicate_leads';
+
+                filename = filename + "-" + self.$moment().format('Y-M-d') + '.csv';
+                link.setAttribute('download', filename);
                 document.body.appendChild(link);
                 link.click();
                 
