@@ -53,7 +53,7 @@
                             <div class="row">
                                 <div class="col">
                                     <el-table
-                                        :data="leads"
+                                        :data="tableData"
                                         style="width: 100%"
                                         height="400"
                                         stripe
@@ -113,9 +113,11 @@
         data() {
             return {
                 activateSpinner: false,
+                tableData: [],
                 form: {
                     leadtype_id: null,
-                    import_date: null
+                    import_date: null,
+                    page: 1
                 }
             }
         },
@@ -132,9 +134,9 @@
 
             formatted_fields: function() {
                 let newFields = [];
-                if (this.leads.length > 0 && this.form.leadtype_id != null) {
+                if (this.tableData.length > 0 && this.form.leadtype_id != null) {
                   
-                    newFields =  Object.keys(this.leads[0]).map(data => {
+                    newFields =  Object.keys(this.tableData[0]).map(data => {
                         let obj = {};
                         obj.code = data;
                         obj.name = data.toUpperCase().replace(/_/g, " ");
@@ -156,7 +158,8 @@
                 axios.get('/leads', {params: this.form}).then((response) => {
                     let {data} = response;
                     this.$store.dispatch('leads/setFetchedLeads', data);
-                    console.log("RESPONSE LEAD: ", data)
+                    console.log("RESPONSE LEAD: ", response)
+                    self.tableData = data.new_data;
                     self.activateSpinner = false;
                 })
                 .catch((e) => {
