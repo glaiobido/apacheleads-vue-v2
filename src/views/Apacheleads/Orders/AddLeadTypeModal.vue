@@ -82,6 +82,7 @@ import "flatpickr/dist/flatpickr.css";
 
 export default {
     props: ['showModal'],
+    name: 'add-lead-type-modal',
     components: {
         Modal,
         draggable,
