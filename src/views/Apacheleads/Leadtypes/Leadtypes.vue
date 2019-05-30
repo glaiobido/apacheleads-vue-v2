@@ -128,6 +128,7 @@
             leadtypes() {
                 this.activateSpinner = true;
                 this.tabledata = this.leadtypes;
+                this.activateSpinner =false;
                 // this.$refs.vuetable.reload();
             }
         },

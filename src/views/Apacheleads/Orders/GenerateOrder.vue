@@ -191,7 +191,7 @@ export default {
                     type: 'success',
                     confirmButtonText: 'Ok'
                 }).then(response => {
-                    self.$emit('closeModal');
+                    self.$emit('closeModal', self.form.customer);
                 });
             });
            

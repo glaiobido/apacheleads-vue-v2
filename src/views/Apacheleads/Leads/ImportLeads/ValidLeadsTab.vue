@@ -52,7 +52,7 @@ export default {
             let newFields = [];
             newFields = this.leadtype(this.leadtype_id).fields.map(data => {
                 let obj = {};
-                obj.name = data.name.replace(/ /g,"_");
+                obj.name = data.name.replace(/ /g,"_").toLowerCase();
                 obj.id = data.id;
                 obj.order = data.order,
                 obj.lead_type_id = data.lead_type_id;

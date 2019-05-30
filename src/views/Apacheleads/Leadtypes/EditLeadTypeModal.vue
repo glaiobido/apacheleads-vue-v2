@@ -42,7 +42,7 @@
                         <div class="row">
                             <div class="col">
                                 <h4>Edit fields: </h4>
-                                <draggable v-model="form.fields" draggable=".item" @start="drag=true" @end="drag=false">
+                                <draggable v-model="form.fields" draggable=".item" @start="drag=true" @end="updateOrder">
                                 <div class="form-group item" v-for="(field, index) of form.fields" :key="field.order">
                                     <div class="my-1">
                                         <base-button
@@ -156,7 +156,7 @@ export default {
             var data = this.leadtype(this.leadTypeId);
 
             this.form.name = data.name;
-            this.form.country = "AU"; // data.country;
+            this.form.country = data.country;
 
             this.form.fields = data.fields.map(field => {
                 return { 
@@ -174,6 +174,20 @@ export default {
 
         removeField(index) {
             this.form.fields.splice(index, 1);
+        },
+
+        updateOrder() {
+            console.log("original: ", this.form.fields);
+            this.form.fields = this.form.fields.map((field, index) => {
+                return { 
+                    'name': field.name,
+                    'id': field.id,
+                    'is_new': false,
+                    'order': index + 1
+                }
+            })
+
+            console.log("after: ", this.form.fields);
         }
     }
 };

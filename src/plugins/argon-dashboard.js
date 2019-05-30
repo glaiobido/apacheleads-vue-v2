@@ -9,6 +9,8 @@ import ElementUI from 'element-ui';
 import VueMoment from 'vue-moment';
 
 
+
+
 export default {
   install(Vue) {
     Vue.use(globalComponents);
@@ -18,5 +20,6 @@ export default {
     Vue.use(VeeValidate);
     Vue.use(ElementUI);
     Vue.use(VueMoment);
+    
   }
 };

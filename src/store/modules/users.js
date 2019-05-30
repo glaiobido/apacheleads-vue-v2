@@ -37,6 +37,12 @@ export const mutations = {
 
   [types.FETCH_ALL_CUSTOMERS] (state, { users }) {
     state.customers = users;
+  },
+
+  setCustomer(state, { user }) {
+   
+    let getcustomer = state.customers.find(customer => customer.id == user);
+    state.customer = getcustomer;
   }
   
 }
@@ -73,5 +79,10 @@ export const actions = {
         .catch((e) => {
               
         });
+    },
+
+    async setCustomerState({commit}, payload) {
+      
+      commit('setCustomer', payload);
     }
 }

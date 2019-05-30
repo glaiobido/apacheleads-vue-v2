@@ -41,5 +41,6 @@ export default {
     Vue.component(TabPane.name, TabPane);
     Vue.component(Tabs.name, Tabs);
     Vue.component(Loader.name, Loader);
+
   }
 };

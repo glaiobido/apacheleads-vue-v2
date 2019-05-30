@@ -59,7 +59,31 @@ const router = new Router({
         {
           path: '/orders',
           name: 'orders',
-          component: () => import(/* webpackChunkName: "demo" */ './views/Apacheleads/Orders/Orders.vue')
+          component: () => import(/* webpackChunkName: "demo" */ './views/Apacheleads/Orders/Orders.vue'),
+          children: [
+            {
+              path: '/',
+              name: 'generate-order',
+              // route level code-splitting
+              // this generates a separate chunk (about.[hash].js) for this route
+              // which is lazy-loaded when the route is visited.
+              component: () => import(/* webpackChunkName: "demo" */ './views/Apacheleads/Orders/OrderResults.vue'),
+              meta: {
+                pageTitle: 'Orders'
+              }
+            },
+            {
+              path: '/deliver',
+              name: 'deliver-order',
+              // route level code-splitting
+              // this generates a separate chunk (about.[hash].js) for this route
+              // which is lazy-loaded when the route is visited.
+              component: () => import(/* webpackChunkName: "demo" */ './views/Apacheleads/Orders/EmailOrder.vue'),
+              meta: {
+                pageTitle: 'Orders'
+              }
+            }
+          ]
         },
         {
           path: '/customers',

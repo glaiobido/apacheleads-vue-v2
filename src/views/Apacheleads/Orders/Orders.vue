@@ -10,38 +10,17 @@
                         <div class="card-header border-0 bg-transparent">
                             <div class="d-flex flex-row-reverse">
                                 <base-button 
+                                        
                                         type="default"
                                         @click="showAddModal = true" 
                                         >New Order</base-button>
                                 </div>
                             </div>          
-                        </div>
+                        
 
                         <div class="card-body" >
-                            
-                            <div class="row">
-                                <div class="col">
-                                    <el-table
-                                        :data="tableData"
-                                        style="width: 100%"
-                                        height="400"
-                                        stripe
-                                        empty-text="No Data Available">
-
-                                        <el-table-column
-                                            sortable
-                                            v-for="(field, index) in formatted_fields" :key="index"
-                                            :fixed="index == 0"
-                                            :label="field.name"
-                                            :prop="field.code"
-                                            width="200">
-                                        </el-table-column>
-                                    </el-table>
-                                </div>
-                            </div>
+                            <router-view :customerData="customer(customerID)"></router-view>
                         </div>
-                           
-                        
 
                         <div class="card-footer d-flex justify-content-end bg-transparent">
                            
@@ -52,10 +31,9 @@
 
                 </div>
             </div>
-          
-            <add-lead-type-modal :showModal="showAddModal" @closeModal="showAddModal=false"></add-lead-type-modal>
+
         </div>
-       
+       <generate-order :showModal="showAddModal" @closeModal="onCloseGenerateModal"></generate-order>
     </div>
 </template>
 
@@ -66,7 +44,7 @@
     import 'vue-select/dist/vue-select.css';
     import flatPicker from "vue-flatpickr-component";
     import "flatpickr/dist/flatpickr.css";
-    import AddLeadTypeModal from './AddLeadTypeModal'
+    import GenerateOrder from './GenerateOrder'
   
 
     export default {
@@ -74,21 +52,42 @@
         components: {
             vSelect,
             flatPicker,
-            'add-lead-type-modal': AddLeadTypeModal
+            GenerateOrder
 
         },
 
         created() {
             this.$store.dispatch('leadtypes/fetchLeadTypes');
+            this.$store.dispatch('users/fetchAllCustomers');
         },
 
         data() {
             return {
                 activateSpinner: false,
-                tableData: [],
-                currentPage: 1,
                 showAddModal: false,
-                showEditModal: false
+                customerID: 0,
+                form: {
+                    leadtype_id: null,
+                    import_date: null,
+                    page: 1
+                },
+                tableData: [{
+                    date: '2016-05-03',
+                    name: 'Tom',
+                    address: 'No. 189, Grove St, Los Angeles'
+                    }, {
+                    date: '2016-05-02',
+                    name: 'Tom',
+                    address: 'No. 189, Grove St, Los Angeles'
+                    }, {
+                    date: '2016-05-04',
+                    name: 'Tom',
+                    address: 'No. 189, Grove St, Los Angeles'
+                    }, {
+                    date: '2016-05-01',
+                    name: 'Tom',
+                    address: 'No. 189, Grove St, Los Angeles'
+                }]
             }
         },
 
@@ -97,7 +96,8 @@
                 user: 'auth/user',
                 leadtypes: 'leadtypes/leadtypes',
                 leadtype: 'leadtypes/leadtype',
-                // leadtype_id: 'leadtypes/leadtype_id',
+                customers: 'users/customers',
+                customer: 'users/customer',
                 leads: 'leads/leads'
             }),
 
@@ -121,7 +121,26 @@
         },
 
         methods: {
-            
+            async fetchLeads() {
+                
+                let self = this;
+                this.activateSpinner = true;
+                axios.get('/leads', {params: this.form}).then((response) => {
+                    let {data} = response;
+                    this.$store.dispatch('leads/setFetchedLeads', data);
+                    // console.log("RESPONSE LEAD: ", response)
+                    self.tableData = data.new_data;
+                    self.activateSpinner = false;
+                })
+                .catch((e) => {
+                        
+                });
+            },
+
+            onCloseGenerateModal(event) {
+                this.showAddModal = false;
+                this.customerID = event ? event : 0;
+            }
         }
 
     };
@@ -138,5 +157,8 @@
     .vs__dropdown-toggle {
         padding: 6px;
         background-color: #fff;
+    }
+    #missing-lead {
+        min-height: 20vh !important;
     }
 </style>
