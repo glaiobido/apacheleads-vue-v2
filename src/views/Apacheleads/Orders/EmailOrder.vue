@@ -76,10 +76,8 @@ export default {
         vSelect,
         flatPicker
     },
-    beforeRouteEnter (to, from, next) {
-        
-    },
-    props: ['customerData'],
+   
+    props: ['customerData', 'disabledExport'],
     data() {
         return {
             activateSpinner: false,

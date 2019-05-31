@@ -8,17 +8,22 @@
                         <h5 class="card-title text-uppercase text-muted mb-0">Total Leads Generated</h5>
                         <span class="h2 font-weight-bold mb-0">{{ leads.length || 0 }}</span>
                         <div class="row mt-2 ml-1">
+                            <form @submit.prevent="sendEmail">
                             <div class="col px-0">
-                                <router-link to="/deliver">
-                                    <el-button
-                                        :disabled="disabledExport"
+                                <el-button
                                         type="primary" 
+                                        nativeType="submit"
                                         size="medium" 
-                                        round><i class="el-icon-message"></i> Export</el-button>
-                                </router-link>
+                                        round><i class="el-icon-message"></i> Deliver Order</el-button>
+                                <el-button
+                                        type="primary" 
+                                        size="medium"
+                                        @click="attachCsv"  
+                                        round><i class="ni ni-cloud-download-95"></i> Preview CSV</el-button>
                                 <!-- <el-button class="ml-2" size="medium" round plain><i class="el-icon-search"></i> View</el-button> -->
 
                             </div>
+                            </form>
                         </div>
                             
                     </div>
@@ -65,18 +70,9 @@ export default {
 
     props: ['customerData'],
 
-    beforeRouteLeave (to, from, next) {
-        // called when the route that renders this component is about to
-        // be navigated away from.
-        // has access to `this` component instance.
-        
-       
-    },
-
     created() {
         this.$store.dispatch('leadtypes/fetchLeadTypes');
         this.$store.dispatch('users/fetchAllCustomers');
-        console.log("prop", this.customerData)
     
         if (this.customerData) {
             this.disabledExport = false;
@@ -87,7 +83,13 @@ export default {
 
     data() {
         return {
-            disabledExport: true
+            order_data: [],
+            form: {
+                customer_email: 0,
+                customer_id: 0,
+                customer: 0,
+                ordered_leads: []
+            }
         }
     },
     computed: {
@@ -100,6 +102,16 @@ export default {
         }),
     },
 
+    watch: {
+        leads: function(value) {
+            this.order_data = value;
+
+            this.form.customer_email = this.customerData.email;
+            this.form.customer_id = this.customerData.id;
+            this.form.customer = this.customerData;
+        }
+    },
+
     methods: {
         toggleExportbtn() {
             if (this.leads.length > 0) {
@@ -107,7 +119,65 @@ export default {
             } else {
                 this.disabledExport = true;
             }
-        }
+        },
+
+        sendEmail() {
+
+            let self = this;
+            this.activateSpinner = true;
+            let leads = JSON.stringify(this.order_data);
+            this.form.ordered_leads = leads;
+            
+            axios.post('/send-order',  this.form).then(function(response){
+                const { data } = response;
+                
+                self.$swal({
+                    title: 'Order Delivered',
+                    text: "Your File has been emailed to customer",
+                    type: 'Success',
+                })
+                
+                self.activateSpinner = false;
+               
+                self.form.customer_email = "";
+                self.form.customer_id = 0;
+                self.form.customer = 0;
+
+                self.$store.dispatch('leads/setFetchedLeads',[]);
+                
+                
+            })
+            .catch(function(e){
+                console.log('FAILURE!!', e);
+            });
+        },
+
+        async attachCsv() {
+            let self = this;
+            this.activateSpinner = true;
+            let leads = JSON.stringify(this.order_data);
+
+            axios.get('/generate-order-csv', { params: { "ordered_leads": leads} }).then(function(response){
+                const { data } = response;
+                console.log("to export: ", data);
+                const url = window.URL.createObjectURL(new Blob([response.data]));
+                const link = document.createElement('a');
+                link.href = url;
+
+                let filename = "ApacheLeads-" + self.$moment().format('Y-M-d') + '.csv';
+                link.setAttribute('download', filename);
+                document.body.appendChild(link);
+                link.click();
+                
+                self.activateSpinner = false;
+               
+                
+                
+            })
+            .catch(function(e){
+                console.log('FAILURE!!', e);
+            });
+        },
     }
 }
 </script>

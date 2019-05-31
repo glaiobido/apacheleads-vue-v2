@@ -66,6 +66,7 @@
                 activateSpinner: false,
                 showAddModal: false,
                 customerID: 0,
+                unAllowExport: true,
                 form: {
                     leadtype_id: null,
                     import_date: null,
@@ -137,9 +138,10 @@
                 });
             },
 
-            onCloseGenerateModal(event) {
+            async onCloseGenerateModal(event) {
                 this.showAddModal = false;
                 this.customerID = event ? event : 0;
+                this.unAllowExport = this.leads.length > 0 ? false :true;
             }
         }
 

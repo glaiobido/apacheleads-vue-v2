@@ -114,7 +114,6 @@
             this.activateSpinner = true;
             this.$store.dispatch('leadtypes/fetchLeadTypes').then(response => {
                 this.tabledata = this.leadtypes;
-                console.log("created hook: ", this.tabledata)
                 this.activateSpinner = false;
                 
             });
